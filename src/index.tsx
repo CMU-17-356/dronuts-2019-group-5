@@ -1,16 +1,8 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-// import App from './App';
-import Hello from './components/Hello';
-import * as serviceWorker from './serviceWorker';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
+import { AppRouter } from './router';
 
 ReactDOM.render(
-    <Hello name="TypeScript" enthusiasmLevel={10} />,
-    document.getElementById('root') as HTMLElement
-  );
-
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: http://bit.ly/CRA-PWA
-serviceWorker.unregister();
+  <AppRouter />
+, document.getElementById('root')
+);

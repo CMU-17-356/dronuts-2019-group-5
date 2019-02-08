@@ -17,6 +17,7 @@ Issue Tracking: https://trello.com/b/0sPIIyJv/17-356-product-backlog
 
 ## References
 - Microsoft's [TypeScript-React-Starter](https://github.com/Microsoft/TypeScript-React-Starter)
+- LemonCode [react-typescript-samples (03 Navigation)](https://github.com/Lemoncode/react-typescript-samples/tree/master/03%20Navigation)
 
 ## Create React App
 
