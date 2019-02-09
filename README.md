@@ -10,7 +10,7 @@ Issue Tracking: https://trello.com/b/0sPIIyJv/17-356-product-backlog
 
 ## Tools used
 - Create-React-App (Typescript)
-- Linting: TSLint
+- Linting: ESLint (via Create-React-App)
 - Testing: Jest and Enzyme
 - Dependency Management: Greenkeeper
 - CI: Travis CI
