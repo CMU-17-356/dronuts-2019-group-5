@@ -23,3 +23,5 @@ deploy:
   script: docker-compose up -d --remove-orphans
   on:
     branch: master
+
+cache: npm
