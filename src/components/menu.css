@@ -1,0 +1,19 @@
+.menu-title {
+  margin: auto;
+  text-align: center;
+}
+
+table.menu {
+  border: 1px;
+  border-collapse: collapse;
+  margin: auto;
+}
+
+td {
+  border: 1px solid black;
+  padding: 10px;
+}
+
+.menu-item-photo {
+  height: 100px;
+}
