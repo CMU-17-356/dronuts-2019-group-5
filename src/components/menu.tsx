@@ -94,7 +94,9 @@ export class Menu extends React.Component<MenuProps, MenuState> {
             {cartItems}
           </tbody>
           <tfoot className="cart-summary">
-            <td></td><td>Total: </td><td>{formatPrice(totalPrice)}</td>
+            <tr>
+              <td></td><td>Total: </td><td>{formatPrice(totalPrice)}</td>
+            </tr>
           </tfoot>
         </table>
         <button className="checkout-button" onClick={() => alert("I'll implement this later")}>Check Out</button>
