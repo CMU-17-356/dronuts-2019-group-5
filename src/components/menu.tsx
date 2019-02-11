@@ -41,11 +41,18 @@ export class Menu extends React.Component<MenuProps, MenuState> {
   }
 
   render() {
-    const { items } = this.props;
-    const menuItems = items.map(
+    return (
+      <div className="menu-cart-container">
+        {this.renderMenu()}
+        {this.renderCart()}
+      </div>
+    );
+  }
+
+  renderMenu() {
+    const menuItems = this.props.items.map(
       (itemProps: MenuItemProps) => (this.renderMenuItem(itemProps))
     );
-
     return (
       <div className="menu-container">
         <h1 className="menu-title">Menu</h1>
@@ -55,7 +62,62 @@ export class Menu extends React.Component<MenuProps, MenuState> {
           </tbody>
         </table>
       </div>
+    )
+  }
+
+  renderCart() {
+    let nonzero: CartItemProps[] = [];
+    for (let key of Object.keys(this.state.cart)) {
+      if (this.state.cart[key].quantity > 0) {
+        nonzero.push(this.state.cart[key]);
+      }
+    }
+
+    if (nonzero.length == 0) {
+      return <div className="cart-container" />
+    }
+
+    const cartItems = nonzero.map(
+      (item: CartItemProps) => (this.renderCartItem(item))
     );
+
+    const totalPrice = nonzero.reduce(
+      (total: number, item: CartItemProps) => (total + item.quantity * item.priceInCents),
+      0 // starting value
+    )
+
+    return (
+      <div className="cart-container">
+        <h1 className="cart-title">Cart</h1>
+        <table className="cart">
+          <tbody>
+            {cartItems}
+          </tbody>
+          <tfoot className="cart-summary">
+            <td></td><td>Total: </td><td>{formatPrice(totalPrice)}</td>
+          </tfoot>
+        </table>
+        <button className="checkout-button" onClick={() => alert("I'll implement this later")}>Check Out</button>
+      </div>
+    )
+  }
+
+  renderCartItem(itemProps: CartItemProps) {
+    const {
+      id,
+      name,
+      priceInCents,
+      quantity
+    } = itemProps;
+
+    const totalPrice = quantity * priceInCents;
+    return (
+      <tr className="cart-item" key={id}>
+        <td className="cart-item-name">{name}</td>
+        <td className="cart-item-quantity-price">{quantity} @ {formatPrice(priceInCents)}</td>
+        <td className="cart-item-total-price price">{formatPrice(totalPrice)}</td>
+      </tr>
+    )
   }
 
   increment(id: string) {
@@ -110,7 +172,7 @@ export class Menu extends React.Component<MenuProps, MenuState> {
       <tr className="menu-item" key={id}>
         <td><img src={imageUrl} className="menu-item-photo" /></td>
         <td className="menu-item-name">{name}</td>
-        <td className="menu-item-price">{formatPrice(priceInCents)}</td>
+        <td className="menu-item-price price">{formatPrice(priceInCents)}</td>
         <td className="menu-item-quantity-picker">
           <button className="menu-item-quantity-picker-decrement" onClick={this.decrement(id)}> - </button>
           <span className="menu-item-quantity-picker-quantity">{this.state.cart[id].quantity}</span>

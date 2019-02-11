@@ -1,9 +1,23 @@
-.menu-title {
+.menu-cart-container {
+  display: grid;
+  grid-template-columns: 2 / 1;
+}
+
+.menu-container {
+  grid-column: 1;
+}
+
+.cart-container {
+  grid-column: 2;
+  width: 400px;
+}
+
+h1 {
   margin: auto;
   text-align: center;
 }
 
-table.menu {
+table {
   border: 1px;
   border-collapse: collapse;
   margin: auto;
@@ -16,4 +30,14 @@ td {
 
 .menu-item-photo {
   height: 100px;
+}
+
+.price {
+  text-align: right;
+}
+
+.checkout-button {
+  float: right;
+  margin-top: 10px;
+  margin-right: 50px;
 }
