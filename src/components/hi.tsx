@@ -4,7 +4,7 @@ export interface HiProps {
   name: string;
 }
 
-class Hi extends React.Component<HiProps, {}> {
+export class Hi extends React.Component<HiProps, {}> {
   render() {
     return <div>Hi, {this.props.name}</div>;
   }
