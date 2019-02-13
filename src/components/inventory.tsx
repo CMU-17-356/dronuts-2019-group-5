@@ -6,31 +6,24 @@ export interface InventoryItemProps{
 	name: string;
 	ingredients: string;
 	priceInCents: number;
-}
-
-export interface KeyedInventoryItemProps extends InventoryItemProps {
-  inStock: boolean;
-}
-
-export interface InventoryProps{
-	items: InventoryItemProps[];
+    inStock: boolean;
 }
 
 export interface InventoryState{
-    compilation: {
-        [key:string]:KeyedInventoryItemProps
-    };
+    compilation: {[key: string]: InventoryItemProps};
+    emptyEntry: InventoryItemProps;
 }
 
-export class Inventory extends React.Component<InventoryItemProps, KeyedInventoryItemProps, InventoryState> { 
-    constructor(props: KeyedInventoryItemProps) {
+export class Inventory extends React.Component<InventoryItemProps, InventoryState> { 
+    constructor(props: InventoryItemProps) {
     super(props);
         
-    let compilation: { [key: string]: KeyedInventoryItemProps } = {};
+    let compilation: {[key: string]: InventoryItemProps} = {};
+    let tempEntry: InventoryItemProps = enterEntry("-1", "blank", "blank ingredients", "0", false);
 
     this.state = {
       compilation: compilation,
-      emptyEntry: KeyedInventoryItemProps,
+      emptyEntry: tempEntry,
     };
         
     this.handleChange = this.handleChange.bind(this);
@@ -49,7 +42,7 @@ export class Inventory extends React.Component<InventoryItemProps, KeyedInventor
     handleChange(event) {
         this.setState(prevState => ({
             ...prevState,
-            compilation:{
+            emptyEntry:{
                 ...prevState.cart,
                 [id]: {
             ...prevState.cart[id],
@@ -105,7 +98,7 @@ export class Inventory extends React.Component<InventoryItemProps, KeyedInventor
   }
 
   renderCompleteInventory() {
-    let nonzero: KeyedInventoryItemProps[] = [];
+    let nonzero: InventoryItemProps[] = [];
     for (let key of Object.keys(this.state.compilation)) {
       if (this.state.compilation[key]) {
         nonzero.push(this.state.compilation[key]);
@@ -184,7 +177,7 @@ export class Inventory extends React.Component<InventoryItemProps, KeyedInventor
     
 }
 
-function enterEntry(config: KeyedInventoryItemProps): {id: string; area: number} {
+function enterEntry(config: InventoryItemProps): {id: string; name: string; ingredients: string; priceInCents: number; inStock: Boolean} {
     let newEntry = {id:0, name: "none", ingredients: "None", priceInCents = 0, inStock: false};
     
     if (config.id) {
