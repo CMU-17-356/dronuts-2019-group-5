@@ -12,7 +12,10 @@ export const AppRouter: React.StatelessComponent<{}> = () => {
           <Route path="/hello1" render={(props) => <Hello {...props} name="page 1" /> } />
           <Route path="/baker-orders" render={(props) => 
             <BakerOrders {...props} items={[
-              {id: "1", name: "Rainbow donut"},
+              {id: "1", name: "Original Glazed", status: "Incoming"},
+              {id: "2", name: "Chocolate Glazed", status: "In progress"},
+              {id: "3", name: "Jelly", status: "On drone"},
+              {id: "4", name: "Rainbow Sprinkles", status: "Delivered"},
             ]} /> 
           } />
           <Route path="/menu" render={(props) =>
