@@ -139,7 +139,6 @@ export class Inventory extends React.Component<InventoryProps, InventoryState> {
             type="number"
             value={this.state.newEntry.priceInCents}
             onChange={this.handleChange} />
-              />
         </label>
         <br />
         <label className="checkbox">
