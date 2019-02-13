@@ -10,7 +10,7 @@ export const AppRouter: React.StatelessComponent<{}> = () => {
         <Switch>
           <Route exact path="/" render={(props) => <Hello {...props} name="page 1" /> } />
           <Route path="/hello1" render={(props) => <Hello {...props} name="page 1" /> } />
-          <Route path="/hello2" render={(props) => <Hello {...props} name="page 2" /> } />
+          <Route path="/inventory" render={(props) => <Inventory {...props} name="inventory" /> } />
           <Route path="/hello3" render={(props) => <Hello {...props} name="page 3" /> } />
           <Route path="/menu" render={(props) =>
             <Menu {...props} items={[

@@ -22,22 +22,19 @@ export interface InventoryState{
     };
 }
 
-export class Inventory extends React.Component<InventoryProps, InventoryState> { 
-    constructor(props: InventoryProps) {
+export class Inventory extends React.Component<InventoryItemProps, KeyedInventoryItemProps, InventoryState> { 
+    constructor(props: KeyedInventoryItemProps) {
     super(props);
         
     let compilation: { [key: string]: KeyedInventoryItemProps } = {};
-        
-    for (let item of this.props.items) {
-      cart[item.id] = {
-        ...item,
-        inStock: true
-      };
-    }
 
     this.state = {
       compilation: compilation,
-    };   
+      emptyEntry: KeyedInventoryItemProps,
+    };
+        
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
     
     render() {
@@ -48,20 +45,61 @@ export class Inventory extends React.Component<InventoryProps, InventoryState> {
           </div>
         );
       }
+  
+    handleChange(event) {
+        this.setState(prevState => ({
+            ...prevState,
+            compilation:{
+                ...prevState.cart,
+                [id]: {
+            ...prevState.cart[id],
+            quantity: prevState.cart[id].quantity
+            }
+        }));
+    }
+ 	
+    handleSubmit(event) {
+    	event.preventDefault();
+        Object.keys(this.state.compilation).reduce(function(a, b){ return obj[a] > obj[b] ? a : b });
+    	
+  	}
 
-    //needs edit
-   renderInput() {
-    const inventoryItems = this.props.items.map(
-      (itemProps: InventoryItemProps) => (this.renderInventoryItem(itemProps))
-    );
+  renderInput() {
     return (
-      <div className="inventory-container">
-        <h1 className="inventory-title">Inventory</h1>
-        <table className="menu">
-          <tbody>
-            {inventoryItems}
-          </tbody>
-        </table>
+    <div className="input-container">
+      <form> 
+          <label>
+          ID:
+          <input type="text"/>
+        </label>
+        <br />
+        <label>
+          Name:
+          <input type="text"/>
+        </label>
+        <br />
+        <label>
+         Ingredients:
+          <input type="text"/>
+        </label>
+        <br />
+        <label>
+          Price (in cents):
+          <input
+            name="priceInput"
+            type="number"/>
+        </label>
+          
+        <div className="field">
+            <div className="control">
+                <input
+                  type="submit"
+                  value="Submit"
+                  className="button is-primary"
+                />
+            </div>
+        </div>
+      </form>
       </div>
     )
   }
@@ -69,7 +107,7 @@ export class Inventory extends React.Component<InventoryProps, InventoryState> {
   renderCompleteInventory() {
     let nonzero: KeyedInventoryItemProps[] = [];
     for (let key of Object.keys(this.state.compilation)) {
-      if (this.state.compilation[key].quantity > 0) {
+      if (this.state.compilation[key]) {
         nonzero.push(this.state.compilation[key]);
       }
     }
@@ -89,6 +127,7 @@ export class Inventory extends React.Component<InventoryProps, InventoryState> {
         <table className="compilation">  
           <tbody>
             <tr>
+            <th>ID</th>
             <th>Item</th>
             <th>Ingredients</th> 
             <th>Price</th>
@@ -100,6 +139,7 @@ export class Inventory extends React.Component<InventoryProps, InventoryState> {
       </div>
     )
   }    
+
   updateInStock(id:string){
       return () => {
         this.setState(prevState => ({
@@ -129,6 +169,7 @@ export class Inventory extends React.Component<InventoryProps, InventoryState> {
 
     return (
       <tr className="inventory-item" key={id}>
+        <td className="inventory-item-id">{id}</td>
         <td className="inventory-item-name">{name}</td>
         <td className="inventory-item-ingredients">{ingredients}</td>
         <td className="inventory-item-price price">{formatPrice(priceInCents)}</td>
@@ -141,6 +182,27 @@ export class Inventory extends React.Component<InventoryProps, InventoryState> {
     );
   }
     
+}
+
+function enterEntry(config: KeyedInventoryItemProps): {id: string; area: number} {
+    let newEntry = {id:0, name: "none", ingredients: "None", priceInCents = 0, inStock: false};
+    
+    if (config.id) {
+        newEntry.id = config.id;
+    }
+    if (config.name) {
+        newEntry.name = config.name;
+    }
+    if (config.ingredients) {
+        newEntry.ingredients = config.ingredients;
+    }
+    if (config.priceInCents) {
+        newEntry.priceInCents = config.priceInCents;
+    }
+    if (config.inStock) {
+        newEntry.inStock = config.inStock;
+    }
+    return newEntry;
 }
 
 function formatPrice(priceInCents: number): string {
