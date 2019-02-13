@@ -11,7 +11,7 @@ export interface InventoryItemProps{
 
 export interface InventoryState{
     compilation: {[key: string]: InventoryItemProps};
-    emptyEntry: InventoryItemProps;
+    newEntry: InventoryItemProps;
 }
 
 export class Inventory extends React.Component<InventoryItemProps, InventoryState> { 
@@ -23,7 +23,7 @@ export class Inventory extends React.Component<InventoryItemProps, InventoryStat
 
     this.state = {
       compilation: compilation,
-      emptyEntry: tempEntry,
+      newEntry: tempEntry,
     };
         
     this.handleChange = this.handleChange.bind(this);
@@ -40,20 +40,36 @@ export class Inventory extends React.Component<InventoryItemProps, InventoryStat
       }
   
     handleChange(event) {
-        this.setState(prevState => ({
+        const target = event.target;
+        const value = target.type === "checkbox" ? target.checked : target.value;
+        const name = target.name;
+
+        this.setState({
             ...prevState,
-            emptyEntry:{
-                ...prevState.cart,
-                [id]: {
-            ...prevState.cart[id],
-            quantity: prevState.cart[id].quantity
+            emptyEntry: [name]: value
+        });
+        
+        /*
+        const target = event.target;
+        if (target.name = "id"){
+                this.state.newEntry.id = target.value;
             }
-        }));
+        if (target.name = "name"){
+                this.state.newEntry.name = target.value;
+            }
+        if (target.name = "ingredients"){
+                this.state.ingredients.id = target.value;
+            }
+        if (target.name = "priceInCents"){
+                this.state.newEntry.priceInCents = target.value;
+            }
+        */
     }
  	
     handleSubmit(event) {
     	event.preventDefault();
-        Object.keys(this.state.compilation).reduce(function(a, b){ return obj[a] > obj[b] ? a : b });
+        alert('A name was submitted: ');
+        //Object.keys(this.state.compilation).reduce(function(a, b){ return obj[a] > obj[b] ? a : b });
     	
   	}
 
@@ -63,26 +79,50 @@ export class Inventory extends React.Component<InventoryItemProps, InventoryStat
       <form> 
           <label>
           ID:
-          <input type="text"/>
+          <input 
+              name = "id"
+              type="text"
+              value={this.state.newEntry.id}
+              onChange={this.handleInputChange} />
         </label>
         <br />
         <label>
           Name:
-          <input type="text"/>
+          <input
+              name = name
+              type="text"
+              value={this.state.newEntry.name}
+              onChange={this.handleInputChange} />
         </label>
         <br />
         <label>
          Ingredients:
-          <input type="text"/>
+          <input 
+              name ="ingredients"
+              type="text"
+              value={this.state.newEntry.ingredients}
+              onChange={this.handleInputChange} />
         </label>
         <br />
         <label>
           Price (in cents):
           <input
             name="priceInput"
-            type="number"/>
+            type="number"
+            value={this.state.newEntry.priceInCents}
+            onChange={this.handleInputChange} />
+              />
         </label>
-          
+        <br />
+        <label className="checkbox">
+            <input
+                name="inStock"
+                type="checkbox"
+                checked={this.state.inStock}
+                onChange={this.handleChange}
+            />
+            This is currently in stock
+        </label>
         <div className="field">
             <div className="control">
                 <input
