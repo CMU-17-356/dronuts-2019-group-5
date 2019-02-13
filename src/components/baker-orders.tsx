@@ -17,8 +17,29 @@ export class BakerOrders extends React.Component<BakerOrdersProps, {}> {
       super(props);
   }
   render() {
-      console.log("testing")
-    return <div>Hi, we are just going to put a basic table in here  </div>;
+    const orderItems = this.props.items;
+    console.log(this.props.items);
+    console.log(orderItems);
+    const orderIds = orderItems[0];
+    console.log(orderIds);
+   
+
+    return ( 
+        <div>Hi, we are just going to put a basic table in here 
+            <table>
+            <tr>
+            <td>boo</td>
+            <td>boo</td>
+            <td>boo</td>
+            </tr>
+            <tr>
+            <td>boo</td>
+            <td>boo</td>
+            <td>boo</td>
+            </tr>
+            </table>
+        </div>
+        )
   }
 }
 

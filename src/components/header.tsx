@@ -10,12 +10,6 @@ export const Header: React.StatelessComponent<{}> = () => {
               <Link className="nav-link" to="/hello1">Hello 1</Link>
             </li>
             <li className="nav-item ">
-              <Link className="nav-link" to="/hello2">Hello 2</Link>
-            </li>
-            <li className="nav-item ">
-              <Link className="nav-link" to="/hi">Hi</Link>
-            </li>
-            <li className="nav-item ">
               <Link className="nav-link" to="/baker-orders">Baker Orders</Link>
             </li>
             <li className="nav-item ">

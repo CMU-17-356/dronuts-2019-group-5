@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Route, HashRouter, Switch } from 'react-router-dom';
-import { Hello, Menu, Header, Hi, BakerOrders } from './components';
+import { Hello, Menu, Header, BakerOrders } from './components';
 
 export const AppRouter: React.StatelessComponent<{}> = () => {
   return (
@@ -10,8 +10,6 @@ export const AppRouter: React.StatelessComponent<{}> = () => {
         <Switch> //switch is the parent component, which comes from React router
           <Route exact path="/" render={(props) => <Hello {...props} name="page 1" /> } />
           <Route path="/hello1" render={(props) => <Hello {...props} name="page 1" /> } />
-          <Route path="/hello2" render={(props) => <Hello {...props} name="page 2" /> } />
-          <Route path="/hi" render={(props) => <Hi {...props} name="Yasmine" /> } />
           <Route path="/baker-orders" render={(props) => 
             <BakerOrders {...props} items={[
               {id: "1", name: "Rainbow donut"},
