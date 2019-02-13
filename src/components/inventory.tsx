@@ -11,20 +11,40 @@ export interface InventoryItemProps{
     inStock: boolean;
 }
 
+export interface InventoryProps {
+  items: InventoryItemProps[];
+}
+
 export interface InventoryState{
     compilation: {[key: string]: InventoryItemProps};
     newEntry: InventoryItemProps;
 }
-
-export class Inventory extends React.Component<{}, InventoryState> { 
+ /*
+    render() {
+        return (
+            <h1 className="inventory-title">"Inventory"</h1>
+            <h2> "kjnedlajn lfasdf asdf f"</h2>
+        );
+      }
+      */
+    
     //constructor(props: InventoryItemProps) {
     //super(props);
-    constructor(props:InventoryItemProps) {
+    
+
+export class Inventory extends React.Component<InventoryProps, InventoryState> { 
+    constructor(props: InventoryProps) {
     super(props);
         
     let compilation: {[key: string]: InventoryItemProps} = {};
-    let tempEntry: InventoryItemProps = enterEntry(
-    );
+    
+    for (let item of this.props.items) {
+      compilation[item.id] = {
+        ...item 
+      };
+    }
+    
+    let tempEntry: InventoryItemProps = enterEntry();
 
     this.state = {
       compilation: compilation,
@@ -34,11 +54,11 @@ export class Inventory extends React.Component<{}, InventoryState> {
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
-    
+
     render() {
         return (
           <div className="keyed-inventory-container">
-            <label>Inventory</label>
+            Inventory
             {this.renderInput()}
             {this.renderCompleteInventory()}
           </div>
@@ -56,7 +76,8 @@ export class Inventory extends React.Component<{}, InventoryState> {
             emptyEntry: [name]: value
         });
         
-        */   
+        */  
+        
         if (target.name = "id"){
                 this.state.newEntry.id = target.value;
             }
@@ -72,7 +93,6 @@ export class Inventory extends React.Component<{}, InventoryState> {
          if (target.name = "inStock"){
                 this.state.newEntry.inStock = target.checked;
             }
-
     }
  	
     handleSubmit(event: Event) {
@@ -86,8 +106,7 @@ export class Inventory extends React.Component<{}, InventoryState> {
     return (
     <div className="input-container">
       <form> 
-          <label>
-          ID:
+          <label> ID:
           <input 
               name = "id"
               type="text"
@@ -155,7 +174,7 @@ export class Inventory extends React.Component<{}, InventoryState> {
     }
 
     if (nonzero.length == 0) {
-      return <div className="inventory-container" />
+      return <div className="inventory-container" />;
     }
 
     const compilationItems = nonzero.map(
@@ -212,15 +231,13 @@ export class Inventory extends React.Component<{}, InventoryState> {
 
     return (
       <tr className="inventory-item" key={id}>
-        <td className="inventory-item-id">{id}</td>
-        <td className="inventory-item-name">{name}</td>
+        <td>{id}</td>
+            <td className="inventory-item-name">{name}</td>
         <td className="inventory-item-ingredients">{ingredients}</td>
         <td className="inventory-item-price price">{formatPrice(priceInCents)}</td>
         <td className="inventory-item-instock">{inStock}</td>
-        <td className="inventory-item-instock-toggle">
         <span className="inventory-item-instock-value">{this.state.compilation[id].inStock}</span>
           <button className="inventory-item-instock-toggle-button" onClick={this.updateInStock(id)}> Update </button>
-         </td>
       </tr>
     );
   }
