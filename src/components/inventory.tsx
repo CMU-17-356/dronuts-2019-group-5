@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Component, ChangeEvent } from 'react';
 import './inventory.css';
 
+
 export interface InventoryItemProps{
 	id: string;
 	name: string;
@@ -15,8 +16,10 @@ export interface InventoryState{
     newEntry: InventoryItemProps;
 }
 
-export class Inventory extends React.Component<InventoryItemProps, InventoryState> { 
-    constructor(props: InventoryItemProps) {
+export class Inventory extends React.Component<{}, InventoryState> { 
+    //constructor(props: InventoryItemProps) {
+    //super(props);
+    constructor(props:InventoryItemProps) {
     super(props);
         
     let compilation: {[key: string]: InventoryItemProps} = {};
@@ -35,6 +38,7 @@ export class Inventory extends React.Component<InventoryItemProps, InventoryStat
     render() {
         return (
           <div className="keyed-inventory-container">
+            <label>Inventory</label>
             {this.renderInput()}
             {this.renderCompleteInventory()}
           </div>
@@ -202,7 +206,7 @@ export class Inventory extends React.Component<InventoryItemProps, InventoryStat
         inStock
   	} = itemProps;
 
- 	if (priceInCents <= 0) {
+ 	if (priceInCents < 0) {
 		throw new Error(`Illegal price ${priceInCents}`);
     }
 
