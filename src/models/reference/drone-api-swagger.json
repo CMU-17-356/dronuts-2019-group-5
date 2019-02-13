@@ -1,0 +1,238 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.1",
+        "title": "dronut-drone-api",
+        "description": "dronedelivery"
+    },
+    "basePath": "/api",
+    "paths": {
+        "/airbases/{id}": {
+            "get": {
+                "tags": [
+                    "Airbase"
+                ],
+                "operationId": "Airbase.findById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Request was successful",
+                        "schema": {
+                            "$ref": "#/definitions/Airbase"
+                        }
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/drones/{id}": {
+            "get": {
+                "tags": [
+                    "Drone"
+                ],
+                "operationId": "Drone.findById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "type": "number",
+                        "format": "double"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Request was successful",
+                        "schema": {
+                            "$ref": "#/definitions/Drone"
+                        }
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/drones/{id}/send": {
+            "put": {
+                "tags": [
+                    "Drone"
+                ],
+                "operationId": "Drone.prototype.sendForDelivery",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Drone id",
+                        "required": true,
+                        "type": "string",
+                        "format": "JSON"
+                    },
+                    {
+                        "name": "lat",
+                        "in": "formData",
+                        "required": true,
+                        "type": "number",
+                        "format": "double"
+                    },
+                    {
+                        "name": "lon",
+                        "in": "formData",
+                        "required": true,
+                        "type": "number",
+                        "format": "double"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Request was successful"
+                    }
+                },
+                "deprecated": false
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Airbase"
+        },
+        {
+            "name": "Drone"
+        }
+    ],
+    "consumes": [
+        "application/json",
+        "application/x-www-form-urlencoded",
+        "application/xml",
+        "text/xml"
+    ],
+    "produces": [
+        "application/json",
+        "application/xml",
+        "text/xml",
+        "application/javascript",
+        "text/javascript"
+    ],
+    "definitions": {
+        "Airbase": {
+            "properties": {
+                "id": {
+                    "description": "unique airbase identifier",
+                    "type": "string"
+                },
+                "location": {
+                    "description": "location of the airbase",
+                    "$ref": "#/definitions/GeoPoint"
+                },
+                "drones": {
+                    "description": "unique drone identifier",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+            "required": [
+                "id",
+                "location",
+                "drones"
+            ],
+            "additionalProperties": false
+        },
+        "Drone": {
+            "properties": {
+                "id": {
+                    "type": "number",
+                    "format": "double"
+                },
+                "drone_name": {
+                    "description": "unique drone identifier",
+                    "type": "string"
+                },
+                "location": {
+                    "description": "current location of the drone",
+                    "$ref": "#/definitions/GeoPoint"
+                },
+                "current_delivery": {
+                    "$ref": "#/definitions/Delivery"
+                },
+                "battery": {
+                    "type": "object",
+                    "properties": {
+                        "capacity": {
+                            "description": "battery capacity of the drone in mAh",
+                            "type": "number",
+                            "format": "double"
+                        },
+                        "charge": {
+                            "description": "current capacity of the drone in mAh",
+                            "type": "number",
+                            "format": "double"
+                        }
+                    }
+                }
+            },
+            "required": [
+                "id",
+                "drone_name"
+            ],
+            "additionalProperties": false
+        },
+        "x-any": {
+            "properties": {}
+        },
+        "GeoPoint": {
+            "properties": {
+                "lat": {
+                    "type": "number"
+                },
+                "lng": {
+                    "type": "number"
+                }
+            }
+        },
+        "Delivery": {
+            "properties": {
+                "delivery_id": {
+                    "description": "unique delivery identifier",
+                    "type": "string"
+                },
+                "destination": {
+                    "$ref": "#/definitions/GeoPoint"
+                },
+                "status": {
+                    "description": "in_route | insufficient_charge | failed_to_land | success",
+                    "type": "string"
+                },
+                "route": {
+                    "type": "object",
+                    "properties": {
+                        "time_start": {
+                            "description": "the time the drone is to begin the delivery",
+                            "type": "string",
+                            "format": "date-time"
+                        },
+                        "time_arrive": {
+                            "type": "string",
+                            "format": "date-time"
+                        },
+                        "time_return": {
+                            "type": "string",
+                            "format": "date-time"
+                        }
+                    }
+                }
+            },
+            "required": [
+                "delivery_id",
+                "destination"
+            ],
+            "additionalProperties": false
+        }
+    }
+}
