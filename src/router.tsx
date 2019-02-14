@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Route, HashRouter, Switch } from 'react-router-dom';
-import { Hello, Menu, Header, BakerOrders } from './components';
+import { Hello, Menu, Header, Order } from './components';
 
 export const AppRouter: React.StatelessComponent<{}> = () => {
   return (
@@ -10,12 +10,14 @@ export const AppRouter: React.StatelessComponent<{}> = () => {
         <Switch> //switch is the parent component, which comes from React router
           <Route exact path="/" render={(props) => <Hello {...props} name="page 1" /> } />
           <Route path="/hello1" render={(props) => <Hello {...props} name="page 1" /> } />
+          // route props passes in history, 
           <Route path="/baker-orders" render={(props) => 
-            <BakerOrders {...props} items={[
-              {id: "1", name: "Original Glazed", status: "Incoming"},
-              {id: "2", name: "Chocolate Glazed", status: "In progress"},
-              {id: "3", name: "Jelly", status: "On drone"},
-              {id: "4", name: "Original Glazed", status: "Delivered"},
+            // at this point, Order etc is defined, but the constructor will be called after this line
+            <Order orders={[
+              {id: "1", donuts: "Original Glazed", count: 1, status: "Incoming"},
+              {id: "2", donuts: "Chocolate Glazed", count: 2, status: "On Drone"},
+              {id: "3", donuts: "Jelly", count: 2, status: "In Progress"},
+              {id: "4", donuts: "Rainbow Sprinkles", count: 3, status: "Delivered"},
             ]} /> 
           } />
           <Route path="/menu" render={(props) =>
