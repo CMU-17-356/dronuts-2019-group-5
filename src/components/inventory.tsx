@@ -1,13 +1,13 @@
 import * as React from 'react';
-import { Component, ChangeEvent } from 'react';
+import { Component, ChangeEvent, FormEvent } from 'react';
 import './inventory.css';
 
 
 export interface InventoryItemProps{
-	id: string;
-	name: string;
-	ingredients: string;
-	priceInCents: number;
+    id: string;
+    name: string;
+    ingredients: string;
+    priceInCents: number;
     inStock: boolean;
 }
 
@@ -19,18 +19,7 @@ export interface InventoryState{
     compilation: {[key: string]: InventoryItemProps};
     newEntry: InventoryItemProps;
 }
- /*
-    render() {
-        return (
-            <h1 className="inventory-title">"Inventory"</h1>
-            <h2> "kjnedlajn lfasdf asdf f"</h2>
-        );
-      }
-      */
-    
-    //constructor(props: InventoryItemProps) {
-    //super(props);
-    
+
 
 export class Inventory extends React.Component<InventoryProps, InventoryState> { 
     constructor(props: InventoryProps) {
@@ -39,9 +28,7 @@ export class Inventory extends React.Component<InventoryProps, InventoryState> {
     let compilation: {[key: string]: InventoryItemProps} = {};
     
     for (let item of this.props.items) {
-      compilation[item.id] = {
-        ...item 
-      };
+      compilation[item.id] = item;
     }
     
     let tempEntry: InventoryItemProps = enterEntry();
@@ -65,47 +52,52 @@ export class Inventory extends React.Component<InventoryProps, InventoryState> {
         );
       }
   
-    handleChange(event: ChangeEvent<HTMLInputElement>){
+  handleChange(event: ChangeEvent<HTMLInputElement>){
         const target = event.target;
-        //const value = target.type === "checkbox" ? target.checked : target.value;
-        const name = target.name;
-
-        /*
+  
         this.setState({
-            compilation : this.state.compilation,
-            emptyEntry: [name]: value
-        });
+         newEntry: {
+           ...this.state.newEntry,
+            [target.name]: target.value
+          }
+         });
+      
+      
+       if(target.name == "inStock"){
+            this.setState({
+         newEntry: {
+           ...this.state.newEntry,
+            [target.name]: target.checked
+          }
+         });
+        }
+         
+        }
+         
+    
+  handleSubmit(event: FormEvent) {
+        event.preventDefault();
         
-        */  
-        
-        if (target.name = "id"){
-                this.state.newEntry.id = target.value;
+        let tempEntry: InventoryItemProps = enterEntry();
+        if (this.state.compilation[this.state.newEntry.id]){
+            alert('A donut with that ID was already submitted: ');
             }
-        if (target.name = "name"){
-                this.state.newEntry.name = target.value;
-            }
-        if (target.name = "ingredients"){
-                this.state.newEntry.id = target.value;
-            }
-        if (target.name = "priceInCents"){
-                this.state.newEntry.priceInCents = Number(target.value);
-            }
-         if (target.name = "inStock"){
-                this.state.newEntry.inStock = target.checked;
-            }
+        else{
+            this.setState({
+           compilation:{
+               ...this.state.compilation,
+               [this.state.newEntry.id] : this.state.newEntry
+           },
+           newEntry: tempEntry
+       });
+      alert('A donut was submitted: ');
+        }
     }
- 	
-    handleSubmit(event: Event) {
-    	event.preventDefault();
-        alert('A name was submitted: ');
-        //Object.keys(this.state.compilation).reduce(function(a, b){ return obj[a] > obj[b] ? a : b });
-    	
-  	}
 
   renderInput() {
     return (
     <div className="input-container">
-      <form> 
+      <form onSubmit={this.handleSubmit}> 
           <label> ID:
           <input 
               name = "id"
@@ -135,7 +127,7 @@ export class Inventory extends React.Component<InventoryProps, InventoryState> {
         <label>
           Price (in cents):
           <input
-            name="priceInput"
+            name="priceInCents"
             type="number"
             value={this.state.newEntry.priceInCents}
             onChange={this.handleChange} />
@@ -216,16 +208,16 @@ export class Inventory extends React.Component<InventoryProps, InventoryState> {
   }
 
   renderInventoryItem(itemProps: InventoryItemProps){
-  	const {
-  		id,
-  		name,
-  		ingredients,
-  		priceInCents,
+    const {
+        id,
+        name,
+        ingredients,
+        priceInCents,
         inStock
-  	} = itemProps;
+    } = itemProps;
 
- 	if (priceInCents < 0) {
-		throw new Error(`Illegal price ${priceInCents}`);
+    if (priceInCents < 0) {
+        throw new Error(`Illegal price ${priceInCents}`);
     }
 
     return (
@@ -234,13 +226,21 @@ export class Inventory extends React.Component<InventoryProps, InventoryState> {
             <td className="inventory-item-name">{name}</td>
         <td className="inventory-item-ingredients">{ingredients}</td>
         <td className="inventory-item-price price">{formatPrice(priceInCents)}</td>
-        <td className="inventory-item-instock">{inStock}</td>
-        <span className="inventory-item-instock-value">{this.state.compilation[id].inStock}</span>
+        <td className="inventory-item-instock">{displayYesNo(inStock)}</td>
+        <span className="inventory-item-instock-value"></span>
           <button className="inventory-item-instock-toggle-button" onClick={this.updateInStock(id)}> Update </button>
       </tr>
     );
   }
     
+}
+function displayYesNo(inStock: boolean): string{
+    if(inStock){
+        return "Yes";
+    }
+    else{
+        return "No";
+    }
 }
 
 function enterEntry(): InventoryItemProps {
