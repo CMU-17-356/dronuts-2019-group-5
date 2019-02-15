@@ -5,6 +5,7 @@ export const donutSchema = Joi.object().keys({
   displayName: Joi.string().required(),
   price: Joi.number().integer().required(),
   available: Joi.boolean().required(),
+  display: Joi.boolean().required(),
   imageUrl: Joi.string(),
   ingredients: Joi.array().items(Joi.string()),
 });

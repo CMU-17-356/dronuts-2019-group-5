@@ -6,6 +6,7 @@ const correctDonut = {
   displayName: 'Original Glaze',
   price: 100,
   available: true,
+  display: true,
   imageUrl: 'https://cmu-17-356.github.io/Dronuts/assets/donut_flavors/original_glaze.jpg',
   ingredients: ['sugar'],
 };
