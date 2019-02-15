@@ -26,6 +26,7 @@ export interface MenuState {
 export class Menu extends React.Component<MenuProps, MenuState> {
   constructor(props: MenuProps) {
     super(props);
+  
 
     let cart: { [key: string]: CartItemProps } = {};
     for (let item of this.props.items) {
