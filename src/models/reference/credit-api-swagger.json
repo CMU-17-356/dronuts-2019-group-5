@@ -1,0 +1,322 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.1",
+        "title": "dronut-credit-api",
+        "description": "dronedelivery"
+    },
+    "basePath": "/api",
+    "paths": {
+        "/companies/{id}": {
+            "put": {
+                "tags": [
+                    "company"
+                ],
+                "operationId": "company.create",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "friendly_name",
+                        "in": "formData",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Request was successful",
+                        "schema": {
+                            "$ref": "#/definitions/company"
+                        }
+                    }
+                },
+                "deprecated": false
+            },
+            "get": {
+                "tags": [
+                    "company"
+                ],
+                "operationId": "company.findById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Request was successful",
+                        "schema": {
+                            "$ref": "#/definitions/company"
+                        }
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/transactions": {
+            "post": {
+                "tags": [
+                    "transaction"
+                ],
+                "operationId": "transaction.create",
+                "parameters": [
+                    {
+                        "name": "companyId",
+                        "in": "formData",
+                        "description": "company which the customer is paying",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "amount",
+                        "in": "formData",
+                        "description": "amount in dollars to be paid",
+                        "required": false,
+                        "type": "number",
+                        "format": "double"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Request was successful",
+                        "schema": {
+                            "$ref": "#/definitions/transaction"
+                        }
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/transactions/{id}": {
+            "get": {
+                "tags": [
+                    "transaction"
+                ],
+                "operationId": "transaction.findById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Request was successful",
+                        "schema": {
+                            "$ref": "#/definitions/transaction"
+                        }
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/transactions/{id}/process": {
+            "post": {
+                "tags": [
+                    "transaction"
+                ],
+                "operationId": "transaction.prototype.process",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "transaction id",
+                        "required": true,
+                        "type": "string",
+                        "format": "JSON"
+                    },
+                    {
+                        "name": "customer_details",
+                        "in": "formData",
+                        "required": true,
+                        "type": "string",
+                        "format": "JSON"
+                    },
+                    {
+                        "name": "credit_card",
+                        "in": "formData",
+                        "required": true,
+                        "type": "string",
+                        "format": "JSON"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Request was successful",
+                        "schema": {
+                            "$ref": "#/definitions/transaction"
+                        }
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/transactions/{id}/cancel": {
+            "post": {
+                "tags": [
+                    "transaction"
+                ],
+                "operationId": "transaction.prototype.cancel",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "transaction id",
+                        "required": true,
+                        "type": "string",
+                        "format": "JSON"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Request was successful",
+                        "schema": {
+                            "$ref": "#/definitions/transaction"
+                        }
+                    }
+                },
+                "deprecated": false
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "company"
+        },
+        {
+            "name": "transaction"
+        }
+    ],
+    "consumes": [
+        "application/json",
+        "application/x-www-form-urlencoded",
+        "application/xml",
+        "text/xml"
+    ],
+    "produces": [
+        "application/json",
+        "application/xml",
+        "text/xml",
+        "application/javascript",
+        "text/javascript"
+    ],
+    "definitions": {
+        "company": {
+            "properties": {
+                "id": {
+                    "description": "unique corporate identifier",
+                    "type": "string"
+                },
+                "friendly_name": {
+                    "description": "friendly name for company",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "id",
+                "friendly_name"
+            ],
+            "additionalProperties": false
+        },
+        "transaction": {
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "companyId": {
+                    "type": "string"
+                },
+                "amount": {
+                    "type": "number",
+                    "format": "double"
+                },
+                "status": {
+                    "description": "pending | approved | denied",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "id",
+                "companyId",
+                "amount",
+                "status"
+            ],
+            "additionalProperties": false
+        },
+        "x-any": {
+            "properties": {}
+        },
+        "customer_details": {
+            "properties": {
+                "first_name": {
+                    "type": "string"
+                },
+                "last_name": {
+                    "type": "string"
+                },
+                "billing_addr": {
+                    "type": "string"
+                },
+                "billing_city": {
+                    "type": "string"
+                },
+                "billing_state": {
+                    "type": "string"
+                },
+                "billing_zip": {
+                    "type": "string"
+                },
+                "billing_country": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "first_name",
+                "last_name",
+                "billing_addr",
+                "billing_city",
+                "billing_state",
+                "billing_zip",
+                "billing_country"
+            ],
+            "additionalProperties": false
+        },
+        "credit_card": {
+            "properties": {
+                "number": {
+                    "type": "number",
+                    "format": "double"
+                },
+                "cvv": {
+                    "type": "number",
+                    "format": "double"
+                },
+                "expires_mo": {
+                    "type": "number",
+                    "format": "double"
+                },
+                "expires_yr": {
+                    "type": "number",
+                    "format": "double"
+                }
+            },
+            "required": [
+                "number",
+                "cvv",
+                "expires_mo",
+                "expires_yr"
+            ],
+            "additionalProperties": false
+        }
+    }
+}
