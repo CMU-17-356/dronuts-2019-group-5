@@ -4,9 +4,11 @@
   "description": "17-356 Dronuts Project",
   "dependencies": {
     "@types/jest": "24.0.0",
+    "@types/joi": "^14.3.1",
     "@types/node": "10.12.23",
     "@types/react": "16.8.2",
     "@types/react-dom": "16.8.0",
+    "joi": "^14.3.1",
     "react": "^16.8.1",
     "react-dom": "^16.8.1",
     "react-router-dom": "^4.3.1",
@@ -38,9 +40,11 @@
     "not op_mini all"
   ],
   "devDependencies": {
+    "@types/clone": "^0.1.30",
     "@types/enzyme": "^3.1.17",
     "@types/enzyme-adapter-react-16": "^1.0.3",
     "@types/react-router-dom": "^4.3.1",
+    "clone": "^2.1.2",
     "cross-spawn": "^6.0.5",
     "enzyme": "^3.8.0",
     "enzyme-adapter-react-16": "^1.9.1",

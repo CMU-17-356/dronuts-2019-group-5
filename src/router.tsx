@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Route, HashRouter, Switch } from 'react-router-dom';
-import { Hello, Menu, Header, Order } from './components';
+import { Hello, Menu, Header, Order, Inventory } from './components';
 
 export const AppRouter: React.StatelessComponent<{}> = () => {
   return (
@@ -20,6 +20,10 @@ export const AppRouter: React.StatelessComponent<{}> = () => {
               {id: "4", donuts: "Rainbow Sprinkles", count: 3, status: "Delivered"},
             ]} /> 
           } />
+          <Route path="/inventory" render={(props) => <Inventory {...props} items={[
+              {id: "1", name: "Original Glazed", ingredients: "wheat_flour, sugar", priceInCents: 100, inStock: true},
+              {id: "2", name: "Chocolate Glazed", ingredients: "white_flour, chocolate, butter", priceInCents: 150, inStock: true,}]} /> } />
+          <Route path="/hello3" render={(props) => <Hello {...props} name="page 3" /> } />
           <Route path="/menu" render={(props) =>
             <Menu {...props} items={[ //I want to take the properties that the parent component has
               {id: "1", name: "Original Glazed", priceInCents: 100},
