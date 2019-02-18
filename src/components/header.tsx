@@ -11,6 +11,8 @@ export const Header: React.StatelessComponent<{}> = () => {
             </li>
             <li className="nav-item ">
               <Link className="nav-link" to="/baker-orders">Baker Orders</Link>
+            </li>
+            <li>
               <Link className="nav-link" to="/inventory">Inventory</Link>
             </li>
             <li className="nav-item ">

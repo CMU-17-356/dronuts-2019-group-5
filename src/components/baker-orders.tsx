@@ -50,28 +50,53 @@ export class Order extends React.Component<OrderProps, OrderState> {
       //console.log(props.orders.map(x => test(x))); 
 
   }
+
+
   render() {
     //const displayOrders = this.props.orders.map(orders: );
     //this.props.orders.map((anOrder: OrderInterface) => (console.log(anOrder.donuts)));
-    const allOrders = this.props.orders.map((anOrder: OrderInterface) => (oneAtATime(anOrder)));
-    
-    function oneAtATime(anOrder: OrderInterface) {
-      const id = anOrder.id;
-      const donuts = anOrder.donuts;
-      const count = anOrder.count;
-      const status = anOrder.status;
+    // const allOrders = this.props.orders.map((anOrder: OrderInterface) => (oneAtATime(anOrder)));
+    // function oneAtATime(anOrder: OrderInterface) {
+    //   const id = anOrder.id;
+    //   const donuts = anOrder.donuts;
+    //   const count = anOrder.count;
+    //   const status = anOrder.status;
+    //   console.log(anOrder);
+    // }
 
-
-    }
-
-    return <h1>hello,   </h1>;
+    return (
+      <div> {this.renderAllOrders()} </div>
+      );
   }
 
   renderAllOrders() {
-    const allOrders = this.props.orders.map((anOrder: OrderInterface) => (console.log(anOrder.donuts)));
+    const allOrders = this.props.orders.map((anOrder: OrderInterface) => (this.renderAnOrder(anOrder)));
+    //renderAnOrder()
+    return (
+      <div>
+       <li>{allOrders}</li>
+      </div>
+    )
   }
 
-  renderAnOrder() {
+
+
+  renderAnOrder(anOrder: OrderInterface) {
+    const {
+      id,
+      donuts,
+      count,
+      status
+    } = anOrder;
+
+    return (
+    <div>
+      <p>ID is: {id} </p>
+      <p>Donuts is: {donuts} </p>
+      <p>Count is: {count} </p>
+      <p>Status is {status} </p>
+    </div>
+    );
 
   }
 
