@@ -1,6 +1,8 @@
 import * as React from 'react';
+import { createTransactionResponse } from '../models/credit';
 
 import './menu.css';
+import { isNullOrUndefined } from 'util';
 
 export interface MenuItemProps {
   id: string;
@@ -65,6 +67,41 @@ export class Menu extends React.Component<MenuProps, MenuState> {
     )
   }
 
+  async createTransaction(totalPrice: number) {
+    const createTransactionUrl = 'http://credit.17-356.isri.cmu.edu/api/transactions'
+    let promise = fetch(createTransactionUrl, {
+      method: 'POST',
+      body: `companyId=5&amount=${(totalPrice / 100).toFixed(2)}`,
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+    });
+
+    let response = await promise;
+    let result = await response.json();
+    return result;
+  }
+
+  payForCart(totalPrice: number) {
+    return async () => {
+      const response = await this.createTransaction(totalPrice) as any;
+
+      const newTransaction = createTransactionResponse.validate(response);
+      if (newTransaction.error) {
+        alert(newTransaction.error);
+        return;
+      }
+
+      const transactionId = newTransaction.value.id;
+      const getTransactionUrl = `http://credit.17-356.isri.cmu.edu/?transaction_id=${transactionId}`
+      var win = window.open(getTransactionUrl, '_blank');
+      if (win === null) {
+        return;
+      }
+      win.focus();
+    }
+  }
+
   renderCart() {
     let nonzero: CartItemProps[] = [];
     for (let key of Object.keys(this.state.cart)) {
@@ -99,7 +136,7 @@ export class Menu extends React.Component<MenuProps, MenuState> {
             </tr>
           </tfoot>
         </table>
-        <button className="checkout-button" onClick={() => alert("I'll implement this later")}>Check Out</button>
+        <button className="checkout-button" onClick={this.payForCart(totalPrice)}>Check Out</button>
       </div>
     )
   }
