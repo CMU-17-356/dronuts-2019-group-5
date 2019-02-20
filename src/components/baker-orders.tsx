@@ -48,6 +48,9 @@ export class Order extends React.Component<OrderProps, OrderState> {
       console.log('props is ', props);
       console.log('props.orders is ', props.orders);  
       //console.log(props.orders.map(x => test(x))); 
+      //this.state = copy list of items into the state
+      //whenever you want to read from list of orders, you read from this.state vs
+      //you can change the state, but you can't change the props
 
   }
 
