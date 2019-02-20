@@ -3,14 +3,6 @@ import { Link } from 'react-router-dom';
 import {Navbar, Nav} from 'react-bootstrap';
 
 
-const navStyle = {
-  border: '5px solid pink',
-  margin: '10px',
-  padding: '10px'
-};
-
-
-
 export const Header: React.StatelessComponent<{}> = () => {
   return (
   <>
