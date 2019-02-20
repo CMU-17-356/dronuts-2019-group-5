@@ -15,7 +15,14 @@ export const Header: React.StatelessComponent<{}> = () => {
   return (
   <>
   <Navbar bg="dark" variant="dark">
-      <Navbar.Brand href="#hello1">Dronuts</Navbar.Brand> 
+      <Navbar.Brand href="#hello1">
+        <img
+          src="https://cmu-17-356.github.io/Dronuts/assets/Dronut.png"
+          width="108"
+          height="35"
+          className="d-inline-block align-top"
+        />
+      </Navbar.Brand> 
       <Nav className="mr-auto">
         <Nav.Link href="#menu">Menu</Nav.Link>
         <Nav.Link href="#inventory">Inventory</Nav.Link>
