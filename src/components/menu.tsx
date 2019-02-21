@@ -185,7 +185,7 @@ export class Menu extends React.Component<MenuProps, MenuState> {
           </tfoot>
         </table>
 
-        <button className="checkout-button" onClick={this.payForCart(totalPrice)}>Check Out</button>
+        <button className="checkout-button" onClick={this.payForCart(totalPrice)} disabled={this.state.transaction.status !== TransactionStatus.NotStarted}>Check Out</button>
       </div>
     )
   }
