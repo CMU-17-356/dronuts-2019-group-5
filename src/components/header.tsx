@@ -14,7 +14,7 @@ const navStyle = {
 export const Header: React.StatelessComponent<{}> = () => {
   return (
   <>
-  <Navbar bg="dark" variant="dark">
+  <Navbar bg="primary" variant="dark" style="blue">
       <Navbar.Brand href="#hello1">Dronuts</Navbar.Brand> 
       <Nav className="mr-auto">
         <Nav.Link href="#menu">Menu</Nav.Link>
@@ -22,25 +22,6 @@ export const Header: React.StatelessComponent<{}> = () => {
       </Nav>
   </Navbar>
   </>
-
-
-
-
-    // <div className="row col-12">
-    //   <nav className="navbar navbar-expand-lg navbar-light bg-white" id="navbar">
-    //       <ul style={navStyle} className="navbar-nav mr-auto">
-    //         <li className="nav-item">
-    //           <Link className="nav-link" to="/hello1">Hello 1</Link>
-    //         </li>
-    //         <li className="nav-item ">
-    //           <Link className="nav-link" to="/inventory">Inventory</Link>
-    //         </li>
-    //         <li className="nav-item ">
-    //           <Link className="nav-link" to="/menu">Menu</Link>
-    //         </li>
-    //       </ul>
-    //   </nav>
-    // </div>
   );
 }
 
