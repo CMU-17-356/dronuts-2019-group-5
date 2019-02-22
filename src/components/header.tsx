@@ -25,30 +25,6 @@ export const Header: React.StatelessComponent<{}> = () => {
       </Navbar.Text>
   </Navbar>
   
-
-
-
-
-    // <div className="row col-12">
-    //   <nav className="navbar navbar-expand-lg navbar-light bg-white" id="navbar">
-    //       <ul style={navStyle} className="navbar-nav mr-auto">
-    //         <li className="nav-item">
-    //           <Link className="nav-link" to="/hello1">Hello 1</Link>
-    //         </li>
-    //         <li className="nav-item ">
-    //           <Link className="nav-link" to="/inventory">Inventory</Link>
-    //         </li>
-    //         <li className="nav-item ">
-    //           <Link className="nav-link" to="/menu">Menu</Link>
-    //         </li>
-    //       </ul>
-    //   </nav>
-    // </div>
-=======
-
-  </Navbar>
-  </>
->>>>>>> f7252b0daf7f7f946a9935f4075cd5748934751e
   );
 }
 
