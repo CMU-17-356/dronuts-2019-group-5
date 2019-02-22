@@ -25,6 +25,8 @@ export interface OrderInterface {
  donuts: string;
  count: number;
  status: string;
+ droneID: string;
+ battery: string; //TODO battery is actually a percetage
 }
 
 export interface OrderState {
