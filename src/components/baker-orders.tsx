@@ -76,9 +76,11 @@ export class Order extends React.Component<OrderProps, OrderState> {
     const allOrders = this.props.orders.map((anOrder: OrderInterface) => (this.renderAnOrder(anOrder)));
     //renderAnOrder()
     return (
-      <div>
-       <li>{allOrders}</li>
-      </div>
+      <table className="menu">
+          <tbody>
+            {allOrders}
+          </tbody>
+      </table>
     )
   }
 
@@ -93,12 +95,13 @@ export class Order extends React.Component<OrderProps, OrderState> {
     } = anOrder;
 
     return (
-    <div>
-      <p>ID is: {id} </p>
-      <p>Donuts is: {donuts} </p>
-      <p>Count is: {count} </p>
-      <p>Status is {status} </p>
-    </div>
+    
+    <tr>
+        <td>{id}</td>
+        <td>{donuts}</td>
+        <td>{count}</td>
+        <td>{status}</td>
+    </tr>
     );
 
   }
