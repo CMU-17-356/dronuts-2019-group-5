@@ -1,4 +1,7 @@
 // src/components/Hello.tsx
+//TODO
+//place an order button
+//dronuts logo
 
 import * as React from 'react';
 import './hello.css';
