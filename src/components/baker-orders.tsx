@@ -14,7 +14,7 @@ export interface OrderInterface {
 }
 
 export interface OrderState {
-  orderDic: {[key:string]: OrderInterface};
+  // orderDic: {[key:string]: OrderInterface};
 }
 
 export interface OrderProps {
@@ -29,9 +29,9 @@ function test(x: string) {
 export class Order extends React.Component<OrderProps, OrderState> {
   constructor(props: OrderProps) {
       super(props); 
-      this.state = {
-        orderDic = 
-      }
+      // this.state = {
+      //   orderDic = 
+      // }
   }
 
 
