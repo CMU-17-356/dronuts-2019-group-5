@@ -5,7 +5,7 @@ import {Navbar, Nav} from 'react-bootstrap';
 
 export const Header: React.StatelessComponent<{}> = () => {
   return (
-  
+
   <Navbar bg="dark" variant="dark">
       <Navbar.Brand href="#hello1">
         <img
@@ -44,6 +44,11 @@ export const Header: React.StatelessComponent<{}> = () => {
     //       </ul>
     //   </nav>
     // </div>
+=======
+
+  </Navbar>
+  </>
+>>>>>>> f7252b0daf7f7f946a9935f4075cd5748934751e
   );
 }
 
