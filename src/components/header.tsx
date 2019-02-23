@@ -18,6 +18,7 @@ export const Header: React.StatelessComponent<{}> = () => {
         <Nav className="mr-auto">
           <Nav.Link href="#menu">Menu</Nav.Link>
           <Nav.Link href="#inventory">Inventory</Nav.Link>
+          <Nav.Link href="#baker-orders">Baker Orders</Nav.Link>
         </Nav>
         <Navbar.Text>
           Signed in as: <a href="#login">Bill Peduto</a>

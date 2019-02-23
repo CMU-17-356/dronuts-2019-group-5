@@ -1,8 +1,13 @@
 //TODO after everything works w/ state, Rui will add notification when state is changed (by concatentation)
 //Sources used: https://medium.com/@fay_jai/getting-started-with-reactjs-typescript-and-webpack-95dcaa0ed33c
 
+//click to create an order
+//handleClick funciton
+//button onClick --> create an order and call set state, and pop in order object into that array
+
 import * as React from 'react';
 import './menu.css';
+import {Button} from 'react-bootstrap';
 
 export interface OrderInterface {
  id: string;
@@ -14,7 +19,10 @@ export interface OrderInterface {
 }
 
 export interface OrderState {
-  // orderDic: {[key:string]: OrderInterface};
+  orders: {
+    [key:string]: OrderInterface
+  };
+  //newOrder: OrderProps;
 }
 
 export interface OrderProps {
@@ -29,21 +37,35 @@ function test(x: string) {
 export class Order extends React.Component<OrderProps, OrderState> {
   constructor(props: OrderProps) {
       super(props); 
-      // this.state = {
-      //   orderDic = 
-      // }
+
+      let orders: {[key: string]: OrderInterface} = {};
+    
+      for (let order of this.props.orders) {
+        orders[order.id] = order;
+      }
+
+      this.state = {
+        orders: orders,
+      };
   }
 
-
   render() {
-
+    console.log(this.state.orders);
     return (
-      <div> {this.renderAllOrders()} </div>
+      <div> {this.renderAllOrders()} 
+      
+      </div>
       );
+  }
+  
+  // <Button variant="primary" onClick="handleClick()">Order!</Button>
+
+  handleClick() {
+    console.log('book');
   }
 
   renderAllOrders() {
-    const allOrders = this.props.orders.map((anOrder: OrderInterface) => (this.renderAnOrder(anOrder)));
+    const allOrders = this.state.orders.map((anOrder: OrderInterface) => (this.renderAnOrder(anOrder)));
     return (
       <table className="menu">
           <tbody>
