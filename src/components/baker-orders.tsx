@@ -65,13 +65,25 @@ export class Order extends React.Component<OrderProps, OrderState> {
   }
 
   renderAllOrders() {
-    const allOrders = this.state.orders.map((anOrder: OrderInterface) => (this.renderAnOrder(anOrder)));
+    const allOrders = this.props.orders.map((anOrder: OrderInterface) => (this.renderAnOrder(anOrder)));
     return (
-      <table className="menu">
-          <tbody>
-            {allOrders}
-          </tbody>
-      </table>
+
+      <div className="menu-cart-container">
+          <h1 className="menu-title">Orders</h1>
+          <table className="menu">
+              <tbody>
+              <tr>
+                <th>Order ID</th>
+                <th>Items</th>
+                <th>Quantity</th> 
+                <th>Status</th>
+                <th>Drone ID</th>
+                <th>Drone Battery</th>
+               </tr>
+                {allOrders}
+              </tbody>
+          </table>
+      </div>
     )
   }
 
@@ -80,7 +92,9 @@ export class Order extends React.Component<OrderProps, OrderState> {
       id,
       donuts,
       count,
-      status
+      status,
+      droneID,
+      battery
     } = anOrder;
 
     return (
@@ -90,6 +104,8 @@ export class Order extends React.Component<OrderProps, OrderState> {
         <td>{donuts}</td>
         <td>{count}</td>
         <td>{status}</td>
+        <td>{droneID}</td>
+        <td>{battery}</td>
     </tr>
     );
 
