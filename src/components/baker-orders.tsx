@@ -49,16 +49,17 @@ export class Order extends React.Component<OrderProps, OrderState> {
       for (let order of this.props.orders) {
         ordersDict[order.id] = order;
         console.log(ordersDict[order.id]);
-      }
 
       this.state = {
         ordersDict: ordersDict,
         notificationDOMRef: React.createRef(),
       };
 
+
       console.log(ordersDict);
       console.log(this.state);
       console.log(this.state.ordersDict);
+      }
   }
 
 
@@ -69,12 +70,13 @@ export class Order extends React.Component<OrderProps, OrderState> {
         this.setState({
              ordersDict: {
                ...this.state.ordersDict,
-                 ["4"]: newOrder}
+                 [newOrder.id]: newOrder}
             
              }
         );
         this.addNotification();
     }
+  
 
   render() {
     return (
@@ -113,18 +115,6 @@ export class Order extends React.Component<OrderProps, OrderState> {
    }
 
 
-  // handleClick() {
-  //   console.log('boo');
-  //   var newOrder = this.state.orders.slice();
-  //   // newOrder.push(newOrder: OrderInterface)
-  //   console.log(newOrder);
-  //   return ( () => {
-  //       console.log(newOrder);
-  //   }
-
-  //   )
-  // }
-
   renderAllOrders() {
     let nonzero: OrderInterface[] = [];
     for (let key of Object.keys(this.state.ordersDict)) {
@@ -156,32 +146,15 @@ export class Order extends React.Component<OrderProps, OrderState> {
                 <th>Status</th>
                 <th>Drone ID</th>
                 <th>Battery</th>
-                
                </tr>
                 {ordersDictItems}
               </tbody>
           </table>
-      
+            {/*<button className="orderButton" onClick={this.handleClick.bind(this)}>New order</button>*/}
       </div>
     )
   }
-
-// <button onClick={this.handleClick()} > new Order!</button>
-// <button className="menu-item-quantity-picker-increment" onClick={this.appendOrder(id)}> + </button>
-
-
-// createAnOrder(anOrder: OrderInterface) {
-  //     //create a new order when a button is clicked and store in browser
-  //     return () => {
-  //         this.setState(prevState => ({
-  //             ...prevState,
-  //             order: {
-
-  //             }
-  //         })
-
-  //         )
-  //     }
+      
 
   renderAnOrder(anOrder: OrderInterface) {
     const {
