@@ -18,7 +18,7 @@ export interface OrderInterface {
  count: number;
  status: string;
  droneID: string;
- battery: string; 
+ battery: string;
 }
 
 export interface OrderState {
@@ -40,12 +40,12 @@ function test(x: string) {
 
 export class Order extends React.Component<OrderProps, OrderState> {
   constructor(props: OrderProps) {
-      super(props); 
+      super(props);
 
       let ordersDict: {[key: string]: OrderInterface} = {};
       console.log(ordersDict);
-      
-    
+
+
       for (let order of this.props.orders) {
         ordersDict[order.id] = order;
         console.log(ordersDict[order.id]);
@@ -66,23 +66,21 @@ export class Order extends React.Component<OrderProps, OrderState> {
     handleClick(){
         console.log("This gets called");
         let newOrder: OrderInterface = {id: "4", donuts: "Rainbow Sprinkles", count: 3, status: "Delivered", droneID: "XHF43", battery: "82%"};
-        
+
         this.setState({
              ordersDict: {
                ...this.state.ordersDict,
                  [newOrder.id]: newOrder}
-            
+
              }
         );
-        this.addNotification();
     }
-  
 
   render() {
     return (
-      <div> {this.renderAllOrders()} 
+      <div> {this.renderAllOrders()}
             {this.renderNotificationButton()}</div>
-        
+
       );
   }
 
@@ -106,9 +104,8 @@ export class Order extends React.Component<OrderProps, OrderState> {
   return (
       <div className="app-content">
         <ReactNotification ref={this.state.notificationDOMRef} />
-        <button onClick={(event) => {this.addNotification(); this.handleClick(); }} className="btn btn-primary">
-
-            Go Back
+        <button onClick={(event) => {this.addNotification()(); this.handleClick(); }} className="btn btn-primary">
+            Create things
         </button>
       </div>
     );
@@ -131,8 +128,8 @@ export class Order extends React.Component<OrderProps, OrderState> {
       (anOrder: OrderInterface) =>
       (this.renderAnOrder(anOrder))
     );
-    
-    
+
+
     return (
 
       <div className="menu-cart-container">
@@ -142,7 +139,7 @@ export class Order extends React.Component<OrderProps, OrderState> {
               <tr>
                 <th>Order ID</th>
                 <th>Items</th>
-                <th>Quantity</th> 
+                <th>Quantity</th>
                 <th>Status</th>
                 <th>Drone ID</th>
                 <th>Battery</th>
@@ -154,7 +151,7 @@ export class Order extends React.Component<OrderProps, OrderState> {
       </div>
     )
   }
-      
+
 
   renderAnOrder(anOrder: OrderInterface) {
     const {
@@ -166,7 +163,7 @@ export class Order extends React.Component<OrderProps, OrderState> {
       battery
     } = anOrder;
 
-    return (    
+    return (
     <tr key={id}>
         <td>{id}</td>
         <td>{donuts}</td>
