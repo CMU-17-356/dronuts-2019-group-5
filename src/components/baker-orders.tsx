@@ -52,9 +52,6 @@ export class Order extends React.Component<OrderProps, OrderState> {
         orders: orders,
       };
 
-       //bind sets which object "this" refers to -- the same this that the constructor refers to
-      //this.handleClick = this.handleClick.bind(this);
-
       console.log(orders);
       console.log(this.state);
       console.log(this.state.orders);
@@ -63,15 +60,8 @@ export class Order extends React.Component<OrderProps, OrderState> {
 
   handleClick() {
 
-      let newOrder: OrderInterface = {id: "5", donuts: "Rainbow Sprinkles", count: 3, status: "Delivered", droneID: "XHF43", battery: "82%"};
-      
-      // this.setState(prevState => {
-      //  // this is an entire function body
-      //   let updatedOrders = prevState.orders;
-      //   updatedOrders[newOrder.id] = newOrder;
-      //   return {orders: updatedOrders};
-      // })
 
+      let newOrder: OrderInterface = {id: "5", donuts: "Rainbow Sprinkles", count: 3, status: "Delivered", droneID: "XHF43", battery: "82%"};
 
       this.setState(prevState => ({
         orders: {
@@ -102,7 +92,7 @@ export class Order extends React.Component<OrderProps, OrderState> {
     const allOrders = Object.keys(this.state.orders).map(
       (anOrderKey: string) => this.renderAnOrder(this.state.orders[anOrderKey])
       );
-    
+
     return (
 
       <div className="menu-cart-container">
@@ -116,14 +106,11 @@ export class Order extends React.Component<OrderProps, OrderState> {
                 <th>Status</th>
                 <th>Drone ID</th>
                 <th>Battery</th>
-                
                </tr>
                 {allOrders}
               </tbody>
           </table>
-
-
-      <button onClick={this.handleClick.bind(this)}>New order</button>
+      <button className="orderButton" onClick={this.handleClick.bind(this)}>New order</button>
       </div>
     )
   }

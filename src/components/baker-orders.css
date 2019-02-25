@@ -1,3 +1,7 @@
+.orderButton {
+  width: 100px;
+}
+
 .menu-cart-container {
   display: grid;
   grid-template-columns: 2 / 1;
