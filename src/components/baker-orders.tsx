@@ -81,13 +81,13 @@ export class Order extends React.Component<OrderProps, OrderState> {
 
 
         // this.state.orders[newOrder.id] = newOrder 
-        
+   
         
         
         this.setState(prevState => ({
           orders: {
               ...prevState.orders,
-              newOrder.id: newOrder
+              [newOrder.id]: newOrder
           }
         });
 
