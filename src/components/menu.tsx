@@ -84,12 +84,11 @@ export class Menu extends React.Component<MenuProps, MenuState> {
 
   async checkTransactionStatus() {
     if (this.state.transaction.status == TransactionStatus.NotStarted) {
-      return
+      return;
     }
 
     const response = await getUrl(this.state.transaction.url);
     const transaction = getTransactionInfoResponse.validate(response);
-    console.log(JSON.stringify(transaction));
     if (transaction.error) {
       console.log(transaction.error);
       return;
