@@ -33,34 +33,64 @@ function test(x: string) {
   return x += 'hello';
 }
 
+const newOrder = {}
 
 export class Order extends React.Component<OrderProps, OrderState> {
   constructor(props: OrderProps) {
       super(props); 
 
       let orders: {[key: string]: OrderInterface} = {};
+      console.log(orders);
+      
     
       for (let order of this.props.orders) {
         orders[order.id] = order;
+        console.log(orders[order.id]);
       }
 
       this.state = {
         orders: orders,
       };
+
+      console.log(orders);
+      console.log(this.state);
+      console.log(this.state.orders);
   }
+
+
+    handleClick(): OrderInterface {
+
+        let newOrder: OrderInterface = {id: "4", donuts: "Rainbow Sprinkles", count: 3, status: "Delivered", droneID: "XHF43", battery: "82%"};
+        
+        this.setState({
+             newOrder: {
+               ...this.state.newOrder
+             }
+        });
+
+        return newOrder;
+    }
 
   render() {
     return (
-      <div> {this.renderAllOrders()} 
-      </div>
+      <div> {this.renderAllOrders()} </div>
       );
   }
-  
-  // <Button variant="primary" onClick="handleClick()">Order!</Button>
 
-  handleClick() {
-    console.log('book');
-  }
+
+  
+
+  // handleClick() {
+  //   console.log('boo');
+  //   var newOrder = this.state.orders.slice();
+  //   // newOrder.push(newOrder: OrderInterface)
+  //   console.log(newOrder);
+  //   return ( () => {
+  //       console.log(newOrder);
+  //   }
+
+  //   )
+  // }
 
   renderAllOrders() {
     const allOrders = this.props.orders.map((anOrder: OrderInterface) => (this.renderAnOrder(anOrder)));
@@ -77,13 +107,37 @@ export class Order extends React.Component<OrderProps, OrderState> {
                 <th>Status</th>
                 <th>Drone ID</th>
                 <th>Battery</th>
+                
                </tr>
                 {allOrders}
               </tbody>
           </table>
+      
       </div>
     )
   }
+
+// <button onClick={this.handleClick()} > new Order!</button>
+// <button className="menu-item-quantity-picker-increment" onClick={this.appendOrder(id)}> + </button>
+
+
+  // createAnOrder(anOrder: OrderInterface) {
+  //     //create a new order when a button is clicked and store in browser
+  //     return () => {
+  //         this.setState(prevState => ({
+  //             ...prevState,
+  //             order: {
+
+  //             }
+  //         })
+
+  //         )
+  //     }
+  // }
+
+  
+
+ 
 
   renderAnOrder(anOrder: OrderInterface) {
     const {
@@ -95,9 +149,12 @@ export class Order extends React.Component<OrderProps, OrderState> {
       battery
     } = anOrder;
 
+
+    
+
     return (
     
-    <tr>
+    <tr key={id}>
         <td>{id}</td>
         <td>{donuts}</td>
         <td>{count}</td>
