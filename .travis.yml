@@ -15,6 +15,7 @@ env:
 
 script:
   - npm test
+  - env | grep DOCKER
   - docker-compose build
 
 deploy:
