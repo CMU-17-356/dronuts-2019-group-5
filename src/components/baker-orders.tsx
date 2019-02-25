@@ -53,7 +53,7 @@ export class Order extends React.Component<OrderProps, OrderState> {
       };
 
        //bind sets which object "this" refers to -- the same this that the constructor refers to
-      this.handleClick = this.handleClick.bind(this);
+      //this.handleClick = this.handleClick.bind(this);
 
       console.log(orders);
       console.log(this.state);
@@ -61,39 +61,28 @@ export class Order extends React.Component<OrderProps, OrderState> {
   }
 
 
-    handleClick() {
+  handleClick() {
 
-        let newOrder: OrderInterface = {id: "5", donuts: "Rainbow Sprinkles", count: 3, status: "Delivered", droneID: "XHF43", battery: "82%"};
-
-// this.state.data = data;
-// is wrong!!!
-
-// You should use this.setState({data})      
-
-
-// this.setState(prevState => ({
-//     jasper: {
-//         ...prevState.jasper,
-//         name: 'something'
-//     }
-// }))
+      let newOrder: OrderInterface = {id: "5", donuts: "Rainbow Sprinkles", count: 3, status: "Delivered", droneID: "XHF43", battery: "82%"};
+      
+      // this.setState(prevState => {
+      //  // this is an entire function body
+      //   let updatedOrders = prevState.orders;
+      //   updatedOrders[newOrder.id] = newOrder;
+      //   return {orders: updatedOrders};
+      // })
 
 
+      this.setState(prevState => ({
+        orders: {
+            ...prevState.orders,
+            [newOrder.id]: newOrder
+        }
+      }));
 
-        // this.state.orders[newOrder.id] = newOrder 
-   
-        
-        
-        this.setState(prevState => ({
-          orders: {
-              ...prevState.orders,
-              [newOrder.id]: newOrder
-          }
-        });
-
-        console.log(this.state);
-        
-    }
+      console.log(this.state);
+      
+  }
 
   render() {
     return (
@@ -102,22 +91,18 @@ export class Order extends React.Component<OrderProps, OrderState> {
   }
 
 
-  
-
-  // handleClick() {
-  //   console.log('boo');
-  //   var newOrder = this.state.orders.slice();
-  //   // newOrder.push(newOrder: OrderInterface)
-  //   console.log(newOrder);
-  //   return ( () => {
-  //       console.log(newOrder);
-  //   }
-
-  //   )
-  // }
+ 
 
   renderAllOrders() {
-    const allOrders = this.props.orders.map((anOrder: OrderInterface) => (this.renderAnOrder(anOrder)));
+
+    //you can't call map on a key:value pair object
+
+    // console.log(Object.keys(this.state.orders));
+    
+    const allOrders = Object.keys(this.state.orders).map(
+      (anOrderKey: string) => this.renderAnOrder(this.state.orders[anOrderKey])
+      );
+    
     return (
 
       <div className="menu-cart-container">
@@ -138,33 +123,10 @@ export class Order extends React.Component<OrderProps, OrderState> {
           </table>
 
 
-      <button onClick={this.handleClick} > new Order!</button>
+      <button onClick={this.handleClick.bind(this)}>New order</button>
       </div>
     )
   }
-
-//Notes from Cole
-// () means it is called now, functions are 
-
-// <button className="menu-item-quantity-picker-increment" onClick={this.appendOrder(id)}> + </button>
-
-
-  // createAnOrder(anOrder: OrderInterface) {
-  //     //create a new order when a button is clicked and store in browser
-  //     return () => {
-  //         this.setState(prevState => ({
-  //             ...prevState,
-  //             order: {
-
-  //             }
-  //         })
-
-  //         )
-  //     }
-  // }
-
-  
-
  
 
   renderAnOrder(anOrder: OrderInterface) {
