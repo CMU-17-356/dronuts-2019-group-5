@@ -6,7 +6,7 @@ import {Navbar, Nav} from 'react-bootstrap';
 export const Header: React.StatelessComponent<{}> = () => {
   return (
     <Navbar bg="dark" variant="dark">
-        <Navbar.Brand href="#hello1">
+        <Navbar.Brand href="#welcome">
           <img
             src="https://cmu-17-356.github.io/Dronuts/assets/Dronut.png"
             width="108"

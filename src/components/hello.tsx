@@ -13,12 +13,6 @@ export interface Props {
 
 export class Hello extends React.Component<Props, object> {
   render() {
-    const { name, enthusiasmLevel = 1 } = this.props;
-
-    if (enthusiasmLevel <= 0) {
-      throw new Error('You could be a little more enthusiastic. :D');
-    }
-
     return (
       <div className="hello">
         <div className="greeting">
@@ -30,18 +24,16 @@ export class Hello extends React.Component<Props, object> {
           />
           Pittsburgh-based donut drone delivery
         </div>
-
+        <h4>How it works:</h4>
+        <h5>Step 1</h5>
+        <h5>Step 2</h5>
+        <h5>Step 3</h5>
+        <button><h5> Get started </h5></button>
       </div>
     );
   }
 }
 
-
-// helpers
-
-function getExclamationMarks(numChars: number) {
-  return Array(numChars + 1).join('!');
-}
 
 
 export default Hello;

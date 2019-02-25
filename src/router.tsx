@@ -9,21 +9,20 @@ export const AppRouter: React.StatelessComponent<{}> = () => {
         <Route component={Header} />
         <Switch> //switch is the parent component, which comes from React router
           <Route exact path="/" render={(props) => <Hello {...props} name="page 1" /> } />
-          <Route path="/hello1" render={(props) => <Hello {...props} name="page 1" /> } />
+          <Route path="/welcome" render={(props) => <Hello {...props} name="page 1" /> } />
           // route props passes in history, 
           <Route path="/baker-orders" render={(props) => 
             // at this point, Order etc is defined, but the constructor will be called after this line
             <Order orders={[
-              {id: "1", donuts: "Original Glazed", count: 1, status: "Incoming", droneID: "XHFBE", battery: "FULL"},
-              {id: "2", donuts: "Chocolate Glazed", count: 2, status: "On Drone", droneID: "XHYK2", battery: "EMPTY"},
-              {id: "3", donuts: "Jelly", count: 2, status: "In Progress", droneID: "XHKD2", battery: "HALF FULL"},
-              {id: "4", donuts: "Rainbow Sprinkles", count: 3, status: "Delivered", droneID: "XHF43", battery: "FULL"},
+              {id: "1", donuts: "Original Glazed", count: 1, status: "Incoming", droneID: "XHFBE", battery: "99%"},
+              {id: "2", donuts: "Chocolate Glazed", count: 2, status: "On Drone", droneID: "XHYK2", battery: "10%"},
+              {id: "3", donuts: "Jelly", count: 2, status: "In Progress", droneID: "XHKD2", battery: "54%"},
+              {id: "4", donuts: "Rainbow Sprinkles", count: 3, status: "Delivered", droneID: "XHF43", battery: "82%"},
             ]} /> 
           } />
           <Route path="/inventory" render={(props) => <Inventory {...props} items={[
               {id: "1", name: "Original Glazed", ingredients: "wheat_flour, sugar", priceInCents: 100, inStock: true},
               {id: "2", name: "Chocolate Glazed", ingredients: "white_flour, chocolate, butter", priceInCents: 150, inStock: true,}]} /> } />
-          <Route path="/hello3" render={(props) => <Hello {...props} name="page 3" /> } />
           <Route path="/menu" render={(props) =>
             <Menu {...props} items={[ //I want to take the properties that the parent component has
               {id: "1", name: "Original Glazed", priceInCents: 100},

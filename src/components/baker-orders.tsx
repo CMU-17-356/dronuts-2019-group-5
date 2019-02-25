@@ -15,7 +15,7 @@ export interface OrderInterface {
  count: number;
  status: string;
  droneID: string;
- battery: string; //TODO battery is actually a percetage
+ battery: string; 
 }
 
 export interface OrderState {
@@ -50,10 +50,8 @@ export class Order extends React.Component<OrderProps, OrderState> {
   }
 
   render() {
-    console.log(this.state.orders);
     return (
       <div> {this.renderAllOrders()} 
-      
       </div>
       );
   }
@@ -78,7 +76,7 @@ export class Order extends React.Component<OrderProps, OrderState> {
                 <th>Quantity</th> 
                 <th>Status</th>
                 <th>Drone ID</th>
-                <th>Drone Battery</th>
+                <th>Battery</th>
                </tr>
                 {allOrders}
               </tbody>
