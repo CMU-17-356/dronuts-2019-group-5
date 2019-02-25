@@ -17,7 +17,7 @@ export const AppRouter: React.StatelessComponent<{}> = () => {
               {id: "1", donuts: "Original Glazed", count: 1, status: "Incoming", droneID: "XHFBE", battery: "99%"},
               {id: "2", donuts: "Chocolate Glazed", count: 2, status: "On Drone", droneID: "XHYK2", battery: "10%"},
               {id: "3", donuts: "Jelly", count: 2, status: "In Progress", droneID: "XHKD2", battery: "54%"},
-              {id: "4", donuts: "Rainbow Sprinkles", count: 3, status: "Delivered", droneID: "XHF43", battery: "82%"},
+              //{id: "4", donuts: "Rainbow Sprinkles", count: 3, status: "Delivered", droneID: "XHF43", battery: "82%"},
             ]} /> 
           } />
           <Route path="/inventory" render={(props) => <Inventory {...props} items={[

@@ -6,8 +6,11 @@
 //button onClick --> create an order and call set state, and pop in order object into that array
 
 import * as React from 'react';
+import { Component, ChangeEvent, FormEvent } from 'react';
 import './baker-orders.css';
 import {Button} from 'react-bootstrap';
+import ReactNotification from "react-notifications-component";
+import "react-notifications-component/dist/theme.css";
 
 export interface OrderInterface {
  id: string;
@@ -19,9 +22,10 @@ export interface OrderInterface {
 }
 
 export interface OrderState {
-  orders: {
+  ordersDict: {
     [key:string]: OrderInterface
   };
+  notificationDOMRef: any;
   //newOrder: OrderProps;
 }
 
@@ -33,52 +37,81 @@ function test(x: string) {
   return x += 'hello';
 }
 
-const newOrder = {}
 
 export class Order extends React.Component<OrderProps, OrderState> {
   constructor(props: OrderProps) {
       super(props); 
 
-      let orders: {[key: string]: OrderInterface} = {};
-      console.log(orders);
+      let ordersDict: {[key: string]: OrderInterface} = {};
+      console.log(ordersDict);
       
     
       for (let order of this.props.orders) {
-        orders[order.id] = order;
-        console.log(orders[order.id]);
+        ordersDict[order.id] = order;
+        console.log(ordersDict[order.id]);
       }
 
       this.state = {
-        orders: orders,
+        ordersDict: ordersDict,
+        notificationDOMRef: React.createRef(),
       };
 
-      console.log(orders);
+      console.log(ordersDict);
       console.log(this.state);
-      console.log(this.state.orders);
+      console.log(this.state.ordersDict);
   }
 
 
-    handleClick(): OrderInterface {
-
+    handleClick(){
+        console.log("This gets called");
         let newOrder: OrderInterface = {id: "4", donuts: "Rainbow Sprinkles", count: 3, status: "Delivered", droneID: "XHF43", battery: "82%"};
         
         this.setState({
-             newOrder: {
-               ...this.state.newOrder
+             ordersDict: {
+               ...this.state.ordersDict,
+                 ["4"]: newOrder}
+            
              }
-        });
-
-        return newOrder;
+        );
+        this.addNotification();
     }
 
   render() {
     return (
-      <div> {this.renderAllOrders()} </div>
+      <div> {this.renderAllOrders()} 
+            {this.renderNotificationButton()}</div>
+        
       );
   }
 
+  addNotification() {
+    let messageFull = "3 Rainbow Sprinkles were just ordered";
+    return () => this.state.notificationDOMRef.current.addNotification({
+      title: "You have a new order!",
+      message: messageFull ,
+      type: "success",
+      insert: "top",
+      container: "top-right",
+      animationIn: ["animated", "fadeIn"],
+      animationOut: ["animated", "fadeOut"],
+      dismiss: { duration: 9000 },
+      dismissable: { click: true }
+    });
 
-  
+  }
+
+  renderNotificationButton(){
+  return (
+      <div className="app-content">
+        <ReactNotification ref={this.state.notificationDOMRef} />
+        <button onClick={(event) => {this.addNotification(); this.handleClick(); }} className="btn btn-primary">
+
+            Go Back
+        </button>
+      </div>
+    );
+   }
+
 
   // handleClick() {
   //   console.log('boo');
@@ -93,7 +126,23 @@ export class Order extends React.Component<OrderProps, OrderState> {
   // }
 
   renderAllOrders() {
-    const allOrders = this.props.orders.map((anOrder: OrderInterface) => (this.renderAnOrder(anOrder)));
+    let nonzero: OrderInterface[] = [];
+    for (let key of Object.keys(this.state.ordersDict)) {
+      if (this.state.ordersDict[key]) {
+        nonzero.push(this.state.ordersDict[key]);
+      }
+    }
+
+    if (nonzero.length == 0) {
+      return <div className="orders-container" />;
+    }
+
+    const ordersDictItems = nonzero.map(
+      (anOrder: OrderInterface) =>
+      (this.renderAnOrder(anOrder))
+    );
+    
+    
     return (
 
       <div className="menu-cart-container">
@@ -109,7 +158,7 @@ export class Order extends React.Component<OrderProps, OrderState> {
                 <th>Battery</th>
                 
                </tr>
-                {allOrders}
+                {ordersDictItems}
               </tbody>
           </table>
       
@@ -121,7 +170,7 @@ export class Order extends React.Component<OrderProps, OrderState> {
 // <button className="menu-item-quantity-picker-increment" onClick={this.appendOrder(id)}> + </button>
 
 
-  // createAnOrder(anOrder: OrderInterface) {
+// createAnOrder(anOrder: OrderInterface) {
   //     //create a new order when a button is clicked and store in browser
   //     return () => {
   //         this.setState(prevState => ({
@@ -133,11 +182,6 @@ export class Order extends React.Component<OrderProps, OrderState> {
 
   //         )
   //     }
-  // }
-
-  
-
- 
 
   renderAnOrder(anOrder: OrderInterface) {
     const {
@@ -149,11 +193,7 @@ export class Order extends React.Component<OrderProps, OrderState> {
       battery
     } = anOrder;
 
-
-    
-
-    return (
-    
+    return (    
     <tr key={id}>
         <td>{id}</td>
         <td>{donuts}</td>
@@ -163,9 +203,7 @@ export class Order extends React.Component<OrderProps, OrderState> {
         <td>{battery}</td>
     </tr>
     );
-
   }
-
 }
 
 
