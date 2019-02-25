@@ -1,6 +1,6 @@
 # Because otherwise Travis tests will fail
 # Todo: look into this
-# package-lock.json
+package-lock.json
 
 # From https://github.com/github/gitignore/blob/master/Node.gitignore
 
