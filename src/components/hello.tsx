@@ -12,6 +12,10 @@ export interface Props {
 }
 
 export class Hello extends React.Component<Props, object> {
+  handlePageChange() {
+     window.location.hash = "#menu";
+  }
+
   render() {
     return (
       <div className="hello">
@@ -24,11 +28,15 @@ export class Hello extends React.Component<Props, object> {
           />
           Pittsburgh-based donut drone delivery
         </div>
-        <h4>How it works:</h4>
-        <h5>Step 1</h5>
-        <h5>Step 2</h5>
-        <h5>Step 3</h5>
-        <button><h5> Get started </h5></button>
+        <button onClick={this.handlePageChange}><h5> Place an order </h5></button>
+       <div className="howItWorks">
+       <p></p>
+        <h5>HOW IT WORKS</h5>
+        <h5><b>Step 1</b></h5> <h6> Just like regular food delivery apps, select prefered items from a pre-set menu and place your order with confidence.</h6>
+        <h5><b>Step 2</b></h5> <h6> Our baker prepares fresh donuts and, <i>unlike reguler food delivery apps</i>, loads them on a drone destined for your provided address.</h6>
+        <h5><b>Step 3</b></h5> <h6> With drone delivery, there is no cumbersome back-and-forth of &#34;I'm here, but where are you?&#34; <i>as the drone comes directly to you!</i> </h6>
+        
+       </div>
       </div>
     );
   }
