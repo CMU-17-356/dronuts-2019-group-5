@@ -40,21 +40,15 @@ export class Order extends React.Component<OrderProps, OrderState> {
       super(props); 
 
       let orders: {[key: string]: OrderInterface} = {};
-      console.log(orders);
-      
     
       for (let order of this.props.orders) {
         orders[order.id] = order;
-        console.log(orders[order.id]);
+        
       }
 
       this.state = {
         orders: orders,
       };
-
-      console.log(orders);
-      console.log(this.state);
-      console.log(this.state.orders);
   }
 
 
@@ -69,8 +63,6 @@ export class Order extends React.Component<OrderProps, OrderState> {
             [newOrder.id]: newOrder
         }
       }));
-
-      console.log(this.state);
       
   }
 
@@ -86,9 +78,6 @@ export class Order extends React.Component<OrderProps, OrderState> {
   renderAllOrders() {
 
     //you can't call map on a key:value pair object
-
-    // console.log(Object.keys(this.state.orders));
-    
     const allOrders = Object.keys(this.state.orders).map(
       (anOrderKey: string) => this.renderAnOrder(this.state.orders[anOrderKey])
       );
