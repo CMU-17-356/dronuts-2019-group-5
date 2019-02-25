@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { Component, ChangeEvent, FormEvent } from 'react';
 import './inventory.css';
+import ReactNotification from "react-notifications-component";
+import "react-notifications-component/dist/theme.css";
 
 
 export interface InventoryItemProps{
@@ -18,6 +20,7 @@ export interface InventoryProps {
 export interface InventoryState{
     compilation: {[key: string]: InventoryItemProps};
     newEntry: InventoryItemProps;
+    notificationDOMRef: any;
 }
 
 
@@ -36,21 +39,52 @@ export class Inventory extends React.Component<InventoryProps, InventoryState> {
     this.state = {
       compilation: compilation,
       newEntry: tempEntry,
+      notificationDOMRef: React.createRef(),
     };
         
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.addNotification = this.addNotification.bind(this);
+    
   }
-
+     
     render() {
         return (
           <div className="keyed-inventory-container">
             Inventory
             {this.renderInput()}
             {this.renderCompleteInventory()}
+            {this.renderNotificationButton()}
           </div>
         );
       }
+
+    addNotification(orderId: string, messageBody : string) {
+    let messageFull = orderId.concat(" ", messageBody, " was just ordered");
+    return () => this.state.notificationDOMRef.current.addNotification({
+      title: "You have a new order!",
+      message: messageFull ,
+      type: "success",
+      insert: "top",
+      container: "top-right",
+      animationIn: ["animated", "fadeIn"],
+      animationOut: ["animated", "fadeOut"],
+      dismiss: { duration: 9000 },
+      dismissable: { click: true }
+    });
+  }
+
+  renderNotificationButton(){
+  return (
+      <div className="app-content">
+        <ReactNotification ref={this.state.notificationDOMRef} />
+        <button onClick={this.addNotification(this.state.compilation[1].id, this.state.compilation[1].name)} className="btn btn-primary">
+          Add Notification
+        </button>
+      </div>
+    );
+   }
+
   
   handleChange(event: ChangeEvent<HTMLInputElement>){
         const target = event.target;
@@ -73,8 +107,7 @@ export class Inventory extends React.Component<InventoryProps, InventoryState> {
         }
          
         }
-         
-    
+          
   handleSubmit(event: FormEvent) {
         event.preventDefault();
         
