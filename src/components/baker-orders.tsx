@@ -52,23 +52,47 @@ export class Order extends React.Component<OrderProps, OrderState> {
         orders: orders,
       };
 
+       //bind sets which object "this" refers to -- the same this that the constructor refers to
+      this.handleClick = this.handleClick.bind(this);
+
       console.log(orders);
       console.log(this.state);
       console.log(this.state.orders);
   }
 
 
-    handleClick(): OrderInterface {
+    handleClick() {
 
-        let newOrder: OrderInterface = {id: "4", donuts: "Rainbow Sprinkles", count: 3, status: "Delivered", droneID: "XHF43", battery: "82%"};
+        let newOrder: OrderInterface = {id: "5", donuts: "Rainbow Sprinkles", count: 3, status: "Delivered", droneID: "XHF43", battery: "82%"};
+
+// this.state.data = data;
+// is wrong!!!
+
+// You should use this.setState({data})      
+
+
+// this.setState(prevState => ({
+//     jasper: {
+//         ...prevState.jasper,
+//         name: 'something'
+//     }
+// }))
+
+
+
+        // this.state.orders[newOrder.id] = newOrder 
         
-        this.setState({
-             newOrder: {
-               ...this.state.newOrder
-             }
+        
+        
+        this.setState(prevState => ({
+          orders: {
+              ...prevState.orders,
+              newOrder.id: newOrder
+          }
         });
 
-        return newOrder;
+        console.log(this.state);
+        
     }
 
   render() {
@@ -112,12 +136,16 @@ export class Order extends React.Component<OrderProps, OrderState> {
                 {allOrders}
               </tbody>
           </table>
-      
+
+
+      <button onClick={this.handleClick} > new Order!</button>
       </div>
     )
   }
 
-// <button onClick={this.handleClick()} > new Order!</button>
+//Notes from Cole
+// () means it is called now, functions are 
+
 // <button className="menu-item-quantity-picker-increment" onClick={this.appendOrder(id)}> + </button>
 
 
