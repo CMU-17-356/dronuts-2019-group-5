@@ -36,7 +36,7 @@ export class Hello extends React.Component<Props, object> {
             <h5><b>Step 1</b></h5> <h6> Just like regular food delivery apps, select prefered items from a pre-set menu and place your order with confidence.</h6>
           </div>
           <div className = "column">
-            <h5><b>Step 2</b></h5> <h6> Our baker prepares fresh donuts and, <i>unlike reguler food delivery apps</i>, loads them on a drone destined for your provided address.</h6>
+            <h5><b>Step 2</b></h5> <h6> Our baker prepares fresh donuts and, <i>unlike regular food delivery apps</i>, loads them on a drone destined for your provided address.</h6>
           </div>
           <div className = "column">
             <h5><b>Step 3</b></h5> <h6> With drone delivery, there is no cumbersome back-and-forth of &#34;I'm here, but where are you?&#34; <i>as the drone comes directly to you!</i> </h6>

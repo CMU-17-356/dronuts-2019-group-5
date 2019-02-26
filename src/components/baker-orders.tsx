@@ -65,7 +65,7 @@ export class Order extends React.Component<OrderProps, OrderState> {
 
   handleClick() {
     console.log("This gets called");
-    let newOrder: OrderInterface = { id: "4", donuts: "Rainbow Sprinkles", count: 3, status: "Delivered", droneID: "XHF43", battery: "82%" };
+    let newOrder: OrderInterface = { id: "4", donuts: "Chocolate Glazed", count: 3, status: "Ordered", droneID: "XHG73", battery: "99%" };
 
     this.setState({
       ordersDict: {
@@ -86,7 +86,7 @@ export class Order extends React.Component<OrderProps, OrderState> {
   }
 
   addNotification() {
-    let messageFull = "3 Rainbow Sprinkles were just ordered";
+    let messageFull = "3 Chocolate Glazed were just ordered";
     return () => this.state.notificationDOMRef.current.addNotification({
       title: "You have a new order!",
       message: messageFull,

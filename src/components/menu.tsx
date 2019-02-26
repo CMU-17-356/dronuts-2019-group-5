@@ -76,13 +76,6 @@ export class Menu extends React.Component<MenuProps, MenuState> {
         <h1 className="menu-title">Menu</h1>
         <table className="menu">
           <tbody>
-            <tr>
-            <th>ID</th>
-            <th>Item</th>
-            <th>Ingredients</th> 
-            <th>Price</th>
-            <th>In Stock?</th>
-            </tr>
             {menuItems}
           </tbody>
         </table>
