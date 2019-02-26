@@ -1,6 +1,14 @@
 import * as React from 'react';
+import { createTransactionResponse, getTransactionInfoResponse } from '../models/credit';
 
 import './menu.css';
+
+enum TransactionStatus {
+  NotStarted = "not started",
+  Pending = "pending",
+  Approved = "approved",
+  Denied = "denied",
+}
 
 export interface MenuItemProps {
   id: string;
@@ -19,8 +27,13 @@ export interface MenuProps {
 
 export interface MenuState {
   cart: {
-    [key: string]: CartItemProps
+    [key: string]: CartItemProps;
   };
+  transaction: {
+    url: string;
+    status: TransactionStatus;
+    poller?: number;
+  }
 }
 
 export class Menu extends React.Component<MenuProps, MenuState> {
@@ -37,6 +50,10 @@ export class Menu extends React.Component<MenuProps, MenuState> {
 
     this.state = {
       cart: cart,
+      transaction: {
+        url: '',
+        status: TransactionStatus.NotStarted,
+      },
     };
   }
 
@@ -63,6 +80,70 @@ export class Menu extends React.Component<MenuProps, MenuState> {
         </table>
       </div>
     )
+  }
+
+  async checkTransactionStatus() {
+    if (this.state.transaction.status == TransactionStatus.NotStarted) {
+      return;
+    }
+
+    const response = await getUrl(this.state.transaction.url);
+    const transaction = getTransactionInfoResponse.validate(response);
+    if (transaction.error) {
+      console.log(transaction.error);
+      return;
+    }
+
+    if (transaction.value.status != TransactionStatus.Pending) {
+      // Status has resolved, stop polling
+      window.clearInterval(this.state.transaction.poller)
+      this.setState(prevState => ({
+        ...prevState,
+        transaction: {
+          ...prevState.transaction,
+          status: transaction.value.status,
+          poller: undefined,
+        },
+      }));
+    }
+  }
+
+  startTransactionPolling(transactionId: number) {
+    const getUrl = `http://credit.17-356.isri.cmu.edu/api/transactions/${transactionId}`;
+    this.setState(prevState => ({
+      ...prevState,
+      transaction: {
+        url: getUrl,
+        status: TransactionStatus.Pending,
+        poller: window.setInterval(this.checkTransactionStatus.bind(this), 1000),
+      },
+    }));
+  }
+
+  payForCart(totalPrice: number) {
+    return async () => {
+      // create a new transaction
+      const response = await createTransaction(totalPrice) as any;
+      const newTransaction = createTransactionResponse.validate(response);
+      if (newTransaction.error) {
+        alert(newTransaction.error);
+        return;
+      }
+
+      // open a new window for customer to complete the payment
+      const transactionId = newTransaction.value.id;
+      const getTransactionUrl = `http://credit.17-356.isri.cmu.edu/?transaction_id=${transactionId}`
+      var win = window.open(getTransactionUrl, '_blank');
+      if (win === null) {
+        return;
+      }
+
+      // start polling to monitor status
+      this.startTransactionPolling(transactionId);
+
+      // switch focus to the new tab
+      win.focus();
+    }
   }
 
   renderCart() {
@@ -97,9 +178,13 @@ export class Menu extends React.Component<MenuProps, MenuState> {
             <tr>
               <td></td><td>Total: </td><td>{formatPrice(totalPrice)}</td>
             </tr>
+            <tr>
+              <td></td><td>Status: </td><td>{this.state.transaction.status}</td>
+            </tr>
           </tfoot>
         </table>
-        <button className="checkout-button" onClick={() => alert("I'll implement this later")}>Check Out</button>
+
+        <button className="checkout-button" onClick={this.payForCart(totalPrice)} disabled={this.state.transaction.status !== TransactionStatus.NotStarted}>Check Out</button>
       </div>
     )
   }
@@ -187,6 +272,28 @@ export class Menu extends React.Component<MenuProps, MenuState> {
 
 function formatPrice(priceInCents: number): string {
   return `$${(priceInCents / 100).toFixed(2)}`;
+}
+
+async function createTransaction(totalPrice: number) {
+  const createTransactionUrl = 'http://credit.17-356.isri.cmu.edu/api/transactions'
+  let promise = fetch(createTransactionUrl, {
+    method: 'POST',
+    body: `companyId=5&amount=${(totalPrice / 100).toFixed(2)}`,
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+  });
+
+  let response = await promise;
+  let result = await response.json();
+  return result;
+}
+
+async function getUrl(url: string) {
+  let promise = fetch(url);
+  let response = await promise;
+  let result = await response.json();
+  return result;
 }
 
 export default Menu;
