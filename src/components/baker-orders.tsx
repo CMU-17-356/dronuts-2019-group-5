@@ -6,9 +6,7 @@
 //button onClick --> create an order and call set state, and pop in order object into that array
 
 import * as React from 'react';
-import { Component, ChangeEvent, FormEvent } from 'react';
 import './baker-orders.css';
-import { Button } from 'react-bootstrap';
 import ReactNotification from "react-notifications-component";
 import "react-notifications-component/dist/theme.css";
 
@@ -26,62 +24,45 @@ export interface OrderState {
     [key: string]: OrderInterface
   };
   notificationDOMRef: any;
-  //newOrder: OrderProps;
 }
 
 export interface OrderProps {
   orders: OrderInterface[]
 }
 
-function test(x: string) {
-  return x += 'hello';
-}
-
-
 export class Order extends React.Component<OrderProps, OrderState> {
   constructor(props: OrderProps) {
     super(props);
 
     let ordersDict: { [key: string]: OrderInterface } = {};
-    console.log(ordersDict);
-
 
     for (let order of this.props.orders) {
       ordersDict[order.id] = order;
-      console.log(ordersDict[order.id]);
-
       this.state = {
         ordersDict: ordersDict,
         notificationDOMRef: React.createRef(),
       };
-
-
-      console.log(ordersDict);
-      console.log(this.state);
-      console.log(this.state.ordersDict);
     }
   }
 
 
   handleClick() {
-    console.log("This gets called");
     let newOrder: OrderInterface = { id: "4", donuts: "Chocolate Glazed", count: 3, status: "Ordered", droneID: "XHG73", battery: "99%" };
-
     this.setState({
       ordersDict: {
         ...this.state.ordersDict,
         [newOrder.id]: newOrder
       }
-
     }
     );
   }
 
   render() {
     return (
-      <div> {this.renderAllOrders()}
-        {this.renderNotificationButton()}</div>
-
+      <div>
+        {this.renderAllOrders()}
+        {this.renderNotificationButton()}
+      </div>
     );
   }
 
@@ -126,13 +107,10 @@ export class Order extends React.Component<OrderProps, OrderState> {
     }
 
     const ordersDictItems = nonzero.map(
-      (anOrder: OrderInterface) =>
-        (this.renderAnOrder(anOrder))
+      (anOrder: OrderInterface) => (this.renderAnOrder(anOrder))
     );
 
-
     return (
-
       <div className="menu-cart-container">
         <h1 className="menu-title">Orders</h1>
         <table className="menu">
@@ -148,7 +126,6 @@ export class Order extends React.Component<OrderProps, OrderState> {
             {ordersDictItems}
           </tbody>
         </table>
-        {/*<button className="orderButton" onClick={this.handleClick.bind(this)}>New order</button>*/}
       </div>
     )
   }
