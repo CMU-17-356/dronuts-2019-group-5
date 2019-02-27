@@ -1,7 +1,10 @@
 import * as React from 'react';
 import { createTransactionResponse, getTransactionInfoResponse } from '../models/credit';
-
+import { formatPrice, getDonuts, getUrl } from './helpers';
 import './menu.css';
+
+// Michael Shillingburg via https://giphy.com/gifs/spinning-donuts-donut-l4KhY0teBwlTWKTra
+import spinner from './donutSpinner.gif';
 
 enum TransactionStatus {
   NotStarted = "not started",
@@ -26,6 +29,7 @@ export interface MenuProps {
 }
 
 export interface MenuState {
+  items: MenuItemProps[];
   cart: {
     [key: string]: CartItemProps;
   };
@@ -41,21 +45,38 @@ export class Menu extends React.Component<MenuProps, MenuState> {
     super(props);
   
 
-    let cart: { [key: string]: CartItemProps } = {};
-    for (let item of this.props.items) {
-      cart[item.id] = {
-        ...item,
-        quantity: 0
-      };
-    }
-
+    const cart = this.initCart(this.props.items);
     this.state = {
+      items: this.props.items,
       cart: cart,
       transaction: {
         url: '',
         status: TransactionStatus.NotStarted,
       },
     };
+  }
+
+  initCart(items: MenuItemProps[]) {
+    let cart: { [key: string]: CartItemProps } = {};
+    for (let item of items) {
+      cart[item.id] = {
+        ...item,
+        quantity: 0
+      };
+    }
+    return cart;
+  }
+
+  async componentDidMount() {
+    setTimeout(async () => {
+      const items: MenuItemProps[] = await getDonuts();
+      this.setState((prevState) => ({
+          items: items,
+          cart: this.initCart(items)
+        })
+      );
+      console.log(items);
+    }, 500);
   }
 
   render() {
@@ -68,7 +89,11 @@ export class Menu extends React.Component<MenuProps, MenuState> {
   }
 
   renderMenu() {
-    const menuItems = this.props.items.map(
+    if (this.state.items.length == 0) {
+      return <img className="spinner" src={spinner} alt="Donut Spinner" />
+    }
+
+    const menuItems = this.state.items.map(
       (itemProps: MenuItemProps) => (this.renderMenuItem(itemProps))
     );
     return (
@@ -271,10 +296,6 @@ export class Menu extends React.Component<MenuProps, MenuState> {
   }
 }
 
-function formatPrice(priceInCents: number): string {
-  return `$${(priceInCents / 100).toFixed(2)}`;
-}
-
 async function createTransaction(totalPrice: number) {
   const createTransactionUrl = 'http://credit.17-356.isri.cmu.edu/api/transactions'
   let promise = fetch(createTransactionUrl, {
@@ -285,13 +306,6 @@ async function createTransaction(totalPrice: number) {
     },
   });
 
-  let response = await promise;
-  let result = await response.json();
-  return result;
-}
-
-async function getUrl(url: string) {
-  let promise = fetch(url);
   let response = await promise;
   let result = await response.json();
   return result;

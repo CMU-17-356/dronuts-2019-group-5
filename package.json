@@ -8,8 +8,12 @@
     "@types/node": "10.12.23",
     "@types/react": "16.8.2",
     "@types/react-dom": "16.8.0",
+    "body-parser": "^1.18.3",
     "bootstrap": "^4.3.1",
+    "express": "^4.16.4",
     "joi": "^14.3.1",
+    "nodemon": "^1.18.10",
+    "npm-run-all": "^4.1.5",
     "react": "^16.8.1",
     "react-bootstrap": "^1.0.0-beta.5",
     "react-dom": "^16.8.1",
@@ -28,10 +32,12 @@
     "url": "https://github.com/CMU-17-356/dronuts-2019-group-5/issues"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "npm-run-all -p -r client server",
+    "client": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "server": "node server --exec nodemon"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -53,5 +59,6 @@
     "enzyme-adapter-react-16": "^1.9.1",
     "react-dev-utils": "^7.0.1",
     "react-test-renderer": "^16.8.1"
-  }
+  },
+  "proxy": "http://localhost:3001"
 }
