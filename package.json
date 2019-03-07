@@ -57,7 +57,7 @@
     "cross-spawn": "^6.0.5",
     "enzyme": "^3.8.0",
     "enzyme-adapter-react-16": "^1.9.1",
-    "react-dev-utils": "^7.0.1",
+    "react-dev-utils": "^8.0.0",
     "react-test-renderer": "^16.8.1"
   },
   "proxy": "http://localhost:3001"
