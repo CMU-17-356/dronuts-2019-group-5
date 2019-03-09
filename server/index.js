@@ -1,7 +1,12 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
+const sqlite3 = require('sqlite3').verbose()
+
+const db = new sqlite3.Database('server/dronuts.db')
+
 const app = express();
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.get('/api/greeting', (req, res) => {
@@ -11,14 +16,20 @@ app.get('/api/greeting', (req, res) => {
 });
 
 app.get('/api/donuts', (_, res) => {
-  const donuts = [
-    {id: "1", name: "Original Glazed", priceInCents: 100},
-    {id: "2", name: "Chocolate Glazed", priceInCents: 150, imageUrl: "https://cmu-17-356.github.io/Dronuts/assets/donut_flavors/chocolate_glaze.jpg"},
-    {id: "3", name: "Jelly", priceInCents: 200, imageUrl: "https://cmu-17-356.github.io/Dronuts/assets/donut_flavors/jelly.jpg"},
-  ];
-  res.setHeader('Content-Type', 'application/json');
-  res.send(JSON.stringify(donuts));
+  db.all('SELECT * from donuts', [], (err, rows) => {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify(rows));
+  })
 });
+
+app.post('/api/donuts', (req, res) => {
+  // todo: validate, etc.
+  var stmt = db.prepare('INSERT INTO donuts(name, priceInCents, available, display, imageUrl, ingredients) VALUES (?, ?, ?, ?, ?, ?)')
+  console.log(req.body)
+  stmt.run(req.body.name, req.body.priceInCents, req.body.available, req.body.display, req.body.imageUrl, req.body.ingredients)
+  stmt.finalize()
+  res.status(204).send()
+})
 
 app.listen(3001, () =>
   console.log('Express server is running on localhost:3001')
