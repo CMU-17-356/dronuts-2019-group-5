@@ -27,15 +27,19 @@ app.get('/api/donuts/:donutId', (req, res) => {
     'SELECT * FROM donuts where id=?', req.params.donutId,
     function(err, row) {
       if (err) {
+        // some unknown SQL error
         console.log(err);
         res.sendStatus(500);
         return;
       }
 
       if (row === undefined) {
+        // query executes successfully but no results
         res.sendStatus(404);
         return;
       }
+
+      // return the found result
       res.send(JSON.stringify(row));
     }
   );
@@ -48,11 +52,15 @@ app.post('/api/donuts', (req, res) => {
     req.body.name, req.body.priceInCents, req.body.available, req.body.display, req.body.imageUrl, req.body.ingredients,
     function(err) {
       if (err) {
+        // probably some schema has been violated, log and return the error
+        // this should probably be checked for with Joi,
+        //   but I had issues since that is TS and this Express stuff is not
         console.log(err);
         res.status(400).send(err.message)
         return;
       }
 
+      // send back the ID of the newly created donut
       res.send(JSON.stringify({"id": this.lastID}));
     }
   )
