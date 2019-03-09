@@ -22,13 +22,40 @@ app.get('/api/donuts', (_, res) => {
   })
 });
 
+app.get('/api/donuts/:donutId', (req, res) => {
+  db.get(
+    'SELECT * FROM donuts where id=?', req.params.donutId,
+    function(err, row) {
+      if (err) {
+        console.log(err);
+        res.sendStatus(500);
+        return;
+      }
+
+      if (row === undefined) {
+        res.sendStatus(404);
+        return;
+      }
+      res.send(JSON.stringify(row));
+    }
+  );
+});
+
 app.post('/api/donuts', (req, res) => {
-  // todo: validate, etc.
-  var stmt = db.prepare('INSERT INTO donuts(name, priceInCents, available, display, imageUrl, ingredients) VALUES (?, ?, ?, ?, ?, ?)')
   console.log(req.body)
-  stmt.run(req.body.name, req.body.priceInCents, req.body.available, req.body.display, req.body.imageUrl, req.body.ingredients)
-  stmt.finalize()
-  res.status(204).send()
+  db.run(
+    'INSERT INTO donuts(name, priceInCents, available, display, imageUrl, ingredients) VALUES (?, ?, ?, ?, ?, ?)',
+    req.body.name, req.body.priceInCents, req.body.available, req.body.display, req.body.imageUrl, req.body.ingredients,
+    function(err) {
+      if (err) {
+        console.log(err);
+        res.status(400).send(err.message)
+        return;
+      }
+
+      res.send(JSON.stringify({"id": this.lastID}));
+    }
+  )
 })
 
 app.listen(3001, () =>
