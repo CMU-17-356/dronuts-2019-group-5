@@ -18,6 +18,8 @@ export interface MenuItemProps {
   name: string;
   priceInCents: number; // in cents (0.01 USD)
   imageUrl?: string;
+  display?: number;
+  available?: number;
 }
 
 export interface CartItemProps extends MenuItemProps {
@@ -43,8 +45,6 @@ export interface MenuState {
 export class Menu extends React.Component<MenuProps, MenuState> {
   constructor(props: MenuProps) {
     super(props);
-  
-
     const cart = this.initCart(this.props.items);
     this.state = {
       items: this.props.items,
@@ -274,6 +274,8 @@ export class Menu extends React.Component<MenuProps, MenuState> {
       id,
       name,
       priceInCents,
+      // todo: check how to handle defaults with sqlite nulls/defaults
+      // handle here or in the database?
       imageUrl = "https://cmu-17-356.github.io/Dronuts/assets/donut_flavors/original_glaze.jpg"
     } = itemProps;
 
