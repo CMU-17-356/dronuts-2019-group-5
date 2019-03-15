@@ -14,6 +14,7 @@ Issue Tracking: https://trello.com/b/0sPIIyJv/17-356-product-backlog
 - Testing: Jest and Enzyme
 - Dependency Management: Greenkeeper
 - CI: Travis CI
+- Google Analytics (group5dronuts@gmail.com)
 
 ## References
 - Microsoft's [TypeScript-React-Starter](https://github.com/Microsoft/TypeScript-React-Starter)
