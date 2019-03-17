@@ -1,3 +1,6 @@
+# This DB should be generated using `npm run init-db`
+server/dronuts.db
+
 # Because otherwise Travis tests will fail
 # Todo: look into this
 package-lock.json
