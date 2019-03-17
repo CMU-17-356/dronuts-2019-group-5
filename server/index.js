@@ -22,6 +22,7 @@ app.get('/api/donuts', (_, res) => {
   })
 });
 
+
 app.get('/api/donuts/:donutId', (req, res) => {
   db.get(
     'SELECT * FROM donuts where id=?', req.params.donutId,
@@ -65,6 +66,36 @@ app.post('/api/donuts', (req, res) => {
     }
   )
 })
+
+app.get('/api/orders', (_, res) => {
+  db.all('SELECT * from orders', [], (err, rows) => {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify(rows));
+  })
+});
+
+app.get('/api/orders/:orderId', (req, res) => {
+  db.get(
+    'SELECT * FROM orders where id=?', req.params.orderId,
+    function(err, row) {
+      if (err) {
+        // some unknown SQL error
+        console.log(err);
+        res.sendStatus(500);
+        return;
+      }
+
+      if (row === undefined) {
+        // query executes successfully but no results
+        res.sendStatus(404);
+        return;
+      }
+
+      // return the found result
+      res.send(JSON.stringify(row));
+    }
+  );
+});
 
 app.listen(3001, () =>
   console.log('Express server is running on localhost:3001')
