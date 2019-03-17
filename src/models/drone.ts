@@ -11,17 +11,17 @@ export const GeoPoint = Joi.object().keys({
 export const Airbase = Joi.object().keys({
   id: Joi.string().required(),
   location: GeoPoint.required(),
-  drones: Joi.array().items(Joi.string()).required(), // array of drone IDs
+  drones: Joi.array().items(Joi.number()).required(), // array of drone IDs
 });
 
 export const Delivery = Joi.object().keys({
-  delivery_id: Joi.string().required(),
+  delivery_id: Joi.string(),
   destination: GeoPoint.required(),
-  status: Joi.string().valid('in route', 'insufficient charge', 'failed to land', 'success'),
+  status: Joi.string().valid('in_route', 'insufficient_charge', 'failed_to_land', 'success'),
   route: Joi.object().keys({
-    time_start: Joi.date().iso(),
-    time_arrive: Joi.date().iso(),
-    time_return: Joi.date().iso(),
+    time_start: Joi.date().iso().allow(null),
+    time_arrive: Joi.date().iso().allow(null),
+    time_return: Joi.date().iso().allow(null),
   }),
 });
 
@@ -29,12 +29,36 @@ export const Drone = Joi.object().keys({
   id: Joi.number().required(),
   drone_name: Joi.string().required(),
   location: GeoPoint,
-  current_delivery: Delivery,
+  current_delivery: Delivery.allow(null),
   battery: Joi.object().keys({
     capacity: Joi.number(),
     charge: Joi.number(),
   })
 });
+
+// Todo: automagically generate TS interfaces from Joi
+export interface IGeoPoint {
+  lat: number;
+  lng: number;
+}
+
+export interface IDelivery{
+  delivery_id: string;
+  destination: IGeoPoint;
+  status: string;
+  route: {
+    time_start: string;
+    time_arrive: string;
+    time_return: string;
+  };
+}
+
+export interface IDrone {
+  id: number;
+  drone_name: string;
+  location: IGeoPoint;
+  current_delivery: IDelivery;
+}
 
 /*
  * Definitions in terms of Dronuts use of them
