@@ -28,3 +28,8 @@ export function getDonuts() {
   const getDonutUrl = '/api/donuts';
   return getUrl(getDonutUrl);
 }
+
+export function getOrders() {
+  const getOrdersUrl = '/api/orders';
+  return getUrl(getOrdersUrl);
+}

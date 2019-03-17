@@ -38,7 +38,7 @@ export class Order extends React.Component<OrderProps, OrderState> {
   constructor(props: OrderProps) {
       super(props); 
 
-      let orders: {[key: string]: OrderInterface} = {};
+      let orders: {[key: string]: OrderInterface} = {}; //I have a let orders here and const orders below - this seems wrong?
       console.log(orders);
       
     
@@ -48,12 +48,10 @@ export class Order extends React.Component<OrderProps, OrderState> {
       }
 
       this.state = {
-        orders: orders,
+        orders: orders, //should this be this.props.orders? does it matter?
       };
 
-       //bind sets which object "this" refers to -- the same this that the constructor refers to
-      //this.handleClick = this.handleClick.bind(this);
-
+    
       console.log(orders);
       console.log(this.state);
       console.log(this.state.orders);
@@ -62,14 +60,6 @@ export class Order extends React.Component<OrderProps, OrderState> {
   handleClick() {
 
       let newOrder: OrderInterface = {id: "5", donuts: "Rainbow Sprinkles", count: 3, status: "Delivered", droneID: "XHF43", battery: "82%"};
-      
-      // this.setState(prevState => {
-      //  // this is an entire function body
-      //   let updatedOrders = prevState.orders;
-      //   updatedOrders[newOrder.id] = newOrder;
-      //   return {orders: updatedOrders};
-      // })
-
 
       this.setState(prevState => ({
         orders: {
@@ -82,6 +72,17 @@ export class Order extends React.Component<OrderProps, OrderState> {
       
   }
 
+  async componentDidMount() {
+    setTimeout(async () => {
+      const orders: {[key: string]: OrderInterface} = await getOrders(); //am I unecessarily redefining orders here?
+      this.setState((prevState) => ({
+          orders: orders, 
+        })
+      );
+      console.log(orders);
+    }, 500);
+  }
+
   render() {
     return (
       <div>
@@ -90,50 +91,9 @@ export class Order extends React.Component<OrderProps, OrderState> {
     );
   }
 
-  // addNotification() {
-  //   let messageFull = "3 Chocolate Glazed were just ordered";
-  //   return () => this.state.notificationDOMRef.current.addNotification({
-  //     title: "You have a new order!",
-  //     message: messageFull,
-  //     type: "success",
-  //     insert: "top",
-  //     container: "top-right",
-  //     animationIn: ["animated", "fadeIn"],
-  //     animationOut: ["animated", "fadeOut"],
-  //     dismiss: { duration: 9000 },
-  //     dismissable: { click: true }
-  //   });
-
-  // }
-
-  // renderNotificationButton() {
-  //   return (
-  //     <div className="app-content">
-  //       <ReactNotification ref={this.state.notificationDOMRef} />
-  //       <button onClick={(event) => { this.addNotification()(); this.handleClick(); }} className="btn btn-primary">
-  //         Create things
-  //       </button>
-  //     </div>
-  //   );
-  // }
-
 
   renderAllOrders() {
-    // let nonzero: OrderInterface[] = [];
-    // for (let key of Object.keys(this.state.ordersDict)) {
-    //   if (this.state.ordersDict[key]) {
-    //     nonzero.push(this.state.ordersDict[key]);
-    //   }
-    // }
-
-    // if (nonzero.length == 0) {
-    //   return <div className="orders-container" />;
-    // }
-
-    // const ordersDictItems = nonzero.map(
-    //   (anOrder: OrderInterface) => (this.renderAnOrder(anOrder))
-    // );
-
+   
     const allOrders = Object.keys(this.state.orders).map(
       (anOrderKey: string) => this.renderAnOrder(this.state.orders[anOrderKey])
       );
