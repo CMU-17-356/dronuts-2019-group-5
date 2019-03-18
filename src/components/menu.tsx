@@ -57,9 +57,9 @@ export class Menu extends React.Component<MenuProps, MenuState> {
         url: '',
         status: TransactionStatus.NotStarted,
       },
-     address: "",
-     lat: 40.444205,
-     lng:-79.941556,
+      address: "",
+      lat: 40.444205,
+      lng: -79.941556,
     };
     this.handleChange = this.handleChange.bind(this);
   }
@@ -79,9 +79,10 @@ export class Menu extends React.Component<MenuProps, MenuState> {
     setTimeout(async () => {
       const items: MenuItemProps[] = await getDonuts();
       this.setState((prevState) => ({
-          items: items,
-          cart: this.initCart(items)
-        })
+        ...prevState,
+        items: items,
+        cart: this.initCart(items)
+      })
       );
       console.log(items);
     }, 500);
@@ -139,6 +140,11 @@ export class Menu extends React.Component<MenuProps, MenuState> {
           poller: undefined,
         },
       }));
+
+      if (transaction.value.status === TransactionStatus.Approved) {
+        // add a new order to the database
+
+      }
     }
   }
 
@@ -179,7 +185,7 @@ export class Menu extends React.Component<MenuProps, MenuState> {
       win.focus();
     }
   }
-      
+
   handleChange(event: ChangeEvent<HTMLInputElement>) {
     const target = event.target;
 
@@ -187,21 +193,20 @@ export class Menu extends React.Component<MenuProps, MenuState> {
       address: target.value
     });
   }
-    
+
   getLatLong(address: string) {
-    return async() => {
+    return async () => {
       const createUrl = `http://www.mapquestapi.com/geocoding/v1/address?key=UCHKCIWSQr5GIL7PnrXLXuso9d0NXq5Y&location=${address}`;
 
       let promise = fetch(createUrl);
       let response = await promise;
       let result = await response.json();
       this.setState({
-          lat: result.results[0].locations[0].latLng.lat,
-          lng: result.results[0].locations[0].latLng.lng
+        lat: result.results[0].locations[0].latLng.lat,
+        lng: result.results[0].locations[0].latLng.lng
       })
-  console.log(this.state.lat);
+    }
   }
-}
 
   renderCart() {
     let nonzero: CartItemProps[] = [];
@@ -228,9 +233,9 @@ export class Menu extends React.Component<MenuProps, MenuState> {
       <div className="cart-container">
         <h1 className="cart-title">Cart</h1>
         <form>
-        Address:
-        <input type="text" name="address" value={this.state.address} onChange = {this.handleChange}>
-        </input>
+          Address:
+        <input type="text" name="address" value={this.state.address} onChange={this.handleChange}>
+          </input>
         </form>
         <table className="cart">
           <tbody>
@@ -246,7 +251,7 @@ export class Menu extends React.Component<MenuProps, MenuState> {
           </tfoot>
         </table>
 
-        <button className="checkout-button" onClick= {(event) => { this.payForCart(totalPrice)(); this.getLatLong(this.state.address)(); }} disabled={this.state.transaction.status !== TransactionStatus.NotStarted}>Check Out</button>
+        <button className="checkout-button" onClick={(event) => { this.payForCart(totalPrice)(); this.getLatLong(this.state.address)(); }} disabled={this.state.transaction.status !== TransactionStatus.NotStarted}>Check Out</button>
       </div>
     )
   }
@@ -346,10 +351,10 @@ async function createTransaction(totalPrice: number) {
 
   let response = await promise;
   let result = await response.json();
-  return result; 
+  return result;
 }
 
 
 
-    
+
 export default Menu;
