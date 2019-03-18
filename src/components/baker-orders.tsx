@@ -19,7 +19,7 @@ export interface OrderInterface {
   count: number;
   status: string;
   droneID: string;
-  battery: string;
+  batteryLevel: string;
 }
 
 export interface OrderState {
@@ -59,7 +59,7 @@ export class Order extends React.Component<OrderProps, OrderState> {
 
   handleClick() {
 
-      let newOrder: OrderInterface = {id: "5", donuts: "Rainbow Sprinkles", count: 3, status: "Delivered", droneID: "XHF43", battery: "82%"};
+      let newOrder: OrderInterface = {id: "5", donuts: "Rainbow Sprinkles", count: 3, status: "Delivered", droneID: "XHF43", batteryLevel: "82%"};
 
       this.setState(prevState => ({
         orders: {
@@ -129,7 +129,7 @@ export class Order extends React.Component<OrderProps, OrderState> {
       count,
       status,
       droneID,
-      battery
+      batteryLevel
     } = anOrder;
 
     return (
@@ -139,7 +139,7 @@ export class Order extends React.Component<OrderProps, OrderState> {
         <td>{count}</td>
         <td>{status}</td>
         <td>{droneID}</td>
-        <td>{battery}</td>
+        <td>{batteryLevel}</td>
       </tr>
     );
   }

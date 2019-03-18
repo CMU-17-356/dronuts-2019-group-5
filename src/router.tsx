@@ -13,12 +13,12 @@ export const AppRouter: React.StatelessComponent<{}> = () => {
           // route props passes in history,
           <Route path="/baker-orders" render={(props) =>
             // at this point, Order etc is defined, but the constructor will be called after this line
-            <Order orders={[
-              {id: "1", donuts: "Original Glazed", count: 1, status: "Incoming", droneID: "XHFBE", battery: "99%"},
-              {id: "2", donuts: "Chocolate Glazed", count: 2, status: "On Drone", droneID: "XHYK2", battery: "10%"},
-              {id: "3", donuts: "Jelly", count: 2, status: "In Progress", droneID: "XHKD2", battery: "54%"},
+            <Order orders={[]} />
+              // {id: "1", donuts: "Original Glazed", count: 1, status: "Incoming", droneID: "XHFBE", battery: "99%"},
+              // {id: "2", donuts: "Chocolate Glazed", count: 2, status: "On Drone", droneID: "XHYK2", battery: "10%"},
+              // {id: "3", donuts: "Jelly", count: 2, status: "In Progress", droneID: "XHKD2", battery: "54%"},
               //{id: "4", donuts: "Rainbow Sprinkles", count: 3, status: "Delivered", droneID: "XHF43", battery: "82%"},
-            ]} />
+            
           } />
           <Route path="/inventory" render={(props) => <Inventory {...props} items={[
               {id: "1", name: "Original Glazed", ingredients: "wheat_flour, sugar", priceInCents: 100, inStock: true},
