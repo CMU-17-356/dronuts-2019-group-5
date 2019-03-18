@@ -16,90 +16,114 @@ import {Button} from 'react-bootstrap';
 export interface OrderInterface {
   id: string;
   donuts: string;
-  timestamp: string;
+  timestamp: number;
   status: string;
   droneID: string;
   address: string;
 }
 
 export interface OrderState {
-  orders: {
-    [key: string]: OrderInterface
-  };
+  orders: OrderInterface[];
+  lastTime: number;
+  poller?: number;
+  notificationDOMRef: any;
 }
 
 export interface OrderProps {
-  orders: OrderInterface[]
+  orders: OrderInterface[];
 }
-
-const newOrder = {}
 
 export class Order extends React.Component<OrderProps, OrderState> {
   constructor(props: OrderProps) {
-      super(props); 
-
-      let orders: {[key: string]: OrderInterface} = {}; //I have a let orders here and const orders below - this seems wrong?
-      console.log(orders);
-      
-    
-      for (let order of this.props.orders) {
-        orders[order.id] = order;
-        console.log(orders[order.id]);
-      }
-
+      super(props);
       this.state = {
-        orders: orders, //should this be this.props.orders? does it matter?
+        orders: [], //should this be this.props.orders? does it matter?
+        lastTime: 0,
+        poller: undefined,
+        notificationDOMRef: React.createRef(),
       };
-
-    
-      console.log(orders);
-      console.log(this.state);
-      console.log(this.state.orders);
   }
 
-  // handleClick() {
-
-  //     // let newOrder: OrderInterface = {id: "5", donuts: "Rainbow Sprinkles", count: 3, timestamp: "2019-02-17T15:54:00", status: "Delivered", droneID: "XHF43", batteryLevel: "82%"};
-
-  //     this.setState(prevState => ({
-  //       orders: {
-  //           ...prevState.orders,
-  //           [newOrder.id]: newOrder
-  //       }
-  //     }));
-
-  //     console.log(this.state);
-      
-  // }
-
-
   async componentDidMount() {
-    setTimeout(async () => {
-      const time = (new Date).getTime() - 60*60*24*1000; //orders within the last hour
-      const orders: {[key: string]: OrderInterface} = await getOrders(time); 
+    const time = (new Date).getTime() - 60*60*24*1000; //orders within the last hour
+    const orders: OrderInterface[] = await getOrders(time);
+    console.log(orders);
+    debugger;
+    const lastTime = this.getLastTime(orders);
+    this.setState((prevState) => ({
+        ...prevState,
+        orders: orders,
+        lastTime: lastTime,
+      })
+    );
+    if (!this.state.poller) {
       this.setState((prevState) => ({
-          orders: orders, 
-        })
-      );
-      console.log(orders);
-    }, 500);
+        ...prevState,
+        poller: window.setInterval(this.checkOrders.bind(this), 3000),
+      }));
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.state.poller) {
+      window.clearInterval(this.state.poller)
+    }
+  }
+
+  getLastTime(orders: OrderInterface[]) {
+    let lastTime = this.state.lastTime;
+    for (let o of orders) {
+      if (o.timestamp > lastTime) {
+        lastTime = o.timestamp;
+      }
+    }
+    return lastTime;
+  }
+
+  async checkOrders() {
+    console.log("Checking for orders since " + this.state.lastTime);
+    const orders: any = await getOrders(this.state.lastTime + 1);
+    if (orders.length > 0) { // non-empty
+      const lastTime = this.getLastTime(orders);
+
+      this.setState((prevState) => ({
+        ...prevState,
+        orders: orders.concat(prevState.orders),
+        lastTime: lastTime,
+      }));
+
+      this.addNotification()();
+    }
+  }
+
+  addNotification() {
+    let messageFull = "3 Chocolate Glazed were just ordered";
+    return () => this.state.notificationDOMRef.current.addNotification({
+      title: "You have a new order!",
+      message: messageFull,
+      type: "success",
+      insert: "top",
+      container: "top-right",
+      animationIn: ["animated", "fadeIn"],
+      animationOut: ["animated", "fadeOut"],
+      dismiss: { duration: 9000 },
+      dismissable: { click: true }
+    });
   }
 
   render() {
     return (
       <div>
-
         {this.renderAllOrders()}
+        <ReactNotification ref={this.state.notificationDOMRef} />
       </div>
     );
   }
 
-
   renderAllOrders() {
-   
-    const allOrders = Object.keys(this.state.orders).map(
-      (anOrderKey: string) => this.renderAnOrder(this.state.orders[anOrderKey])
-      );
+
+    debugger;
+    const allOrders = this.state.orders.map(this.renderAnOrder);
 
     //if status equals incoming, then call renderAnOrder
 
@@ -111,7 +135,7 @@ export class Order extends React.Component<OrderProps, OrderState> {
               <tr>
                 <th>Order ID</th>
                 <th>Donuts</th>
-                <th>Timestamp</th> 
+                <th>Timestamp</th>
                 <th>Status</th>
                 <th>Drone ID</th>
                 <th>Address</th>

@@ -70,8 +70,7 @@ app.post('/api/donuts', (req, res) => {
 
 //query is what is passed in when we call the get requests, params is what is "hard coded" into the get request after "/"
 app.get('/api/orders', (req, res) => {
-  console.log(req.query.time);
-  db.all('SELECT * FROM orders WHERE timestamp>?', req.query.time, [], (err, rows) => {
+  db.all('SELECT * FROM orders WHERE timestamp>? ORDER BY timestamp DESC', req.query.time, [], (err, rows) => {
     res.setHeader('Content-Type', 'application/json');
     res.send(JSON.stringify(rows));
   })
