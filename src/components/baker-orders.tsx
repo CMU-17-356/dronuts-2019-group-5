@@ -16,11 +16,10 @@ import {Button} from 'react-bootstrap';
 export interface OrderInterface {
   id: string;
   donuts: string;
-  count: number;
   timestamp: string;
   status: string;
   droneID: string;
-  batteryLevel: string;
+  address: string;
 }
 
 export interface OrderState {
@@ -58,24 +57,26 @@ export class Order extends React.Component<OrderProps, OrderState> {
       console.log(this.state.orders);
   }
 
-  handleClick() {
+  // handleClick() {
 
-      let newOrder: OrderInterface = {id: "5", donuts: "Rainbow Sprinkles", count: 3, timestamp: "2019-02-17T15:54:00", status: "Delivered", droneID: "XHF43", batteryLevel: "82%"};
+  //     // let newOrder: OrderInterface = {id: "5", donuts: "Rainbow Sprinkles", count: 3, timestamp: "2019-02-17T15:54:00", status: "Delivered", droneID: "XHF43", batteryLevel: "82%"};
 
-      this.setState(prevState => ({
-        orders: {
-            ...prevState.orders,
-            [newOrder.id]: newOrder
-        }
-      }));
+  //     this.setState(prevState => ({
+  //       orders: {
+  //           ...prevState.orders,
+  //           [newOrder.id]: newOrder
+  //       }
+  //     }));
 
-      console.log(this.state);
+  //     console.log(this.state);
       
-  }
+  // }
+
 
   async componentDidMount() {
     setTimeout(async () => {
-      const orders: {[key: string]: OrderInterface} = await getOrders(); //am I unecessarily redefining orders here?
+      const time = (new Date).getTime() - 60*60*24*1000; //orders within the last hour
+      const orders: {[key: string]: OrderInterface} = await getOrders(time); 
       this.setState((prevState) => ({
           orders: orders, 
         })
@@ -89,7 +90,6 @@ export class Order extends React.Component<OrderProps, OrderState> {
       <div>
 
         {this.renderAllOrders()}
-        <button>Show only Incoming orders</button>
       </div>
     );
   }
@@ -105,17 +105,16 @@ export class Order extends React.Component<OrderProps, OrderState> {
 
     return (
       <div className="menu-cart-container">
-          <h1 className="menu-title">Orders</h1>
+          <h1 className="menu-title">Orders within the last hour</h1>
           <table className="menu">
               <tbody>
               <tr>
                 <th>Order ID</th>
-                <th>Items</th>
-                <th>Quantity</th> 
+                <th>Donuts</th>
                 <th>Timestamp</th> 
                 <th>Status</th>
                 <th>Drone ID</th>
-                <th>Battery</th> 
+                <th>Address</th>
               </tr>
                 {allOrders}
               </tbody>
@@ -130,23 +129,21 @@ export class Order extends React.Component<OrderProps, OrderState> {
     const {
       id,
       donuts,
-      count,
       timestamp,
       status,
       droneID,
-      batteryLevel
+      address
     } = anOrder;
 
     return (
       <tr key={id}>
         <td>{id}</td>
         <td>{donuts}</td>
-        <td>{count}</td>
         <td>{timestamp}</td>
         <td>{status}</td>
         <td>{droneID}</td>
-        <td>{batteryLevel}</td>
-        <button>Update Order Status</button>
+        <td>{address}</td>
+        <td><button>Update Order Status</button></td>
       </tr>
     );
   }

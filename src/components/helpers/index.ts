@@ -29,7 +29,7 @@ export function getDonuts() {
   return getUrl(getDonutUrl);
 }
 
-export function getOrders() {
-  const getOrdersUrl = '/api/orders';
+export function getOrders(time: number) {
+  const getOrdersUrl = '/api/orders?time=' + time;
   return getUrl(getOrdersUrl);
 }
