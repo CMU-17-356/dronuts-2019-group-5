@@ -124,10 +124,11 @@ app.post('/api/orders', (req, res) => {
 });
 
 //use to update an order
-app.post('/api/orders/orderId', (req, res) => {
+app.post('/api/orders/:orderId', (req, res) => {
   console.log(req.body)
   db.run(
-    'SELECT * FROM orders where id=?', req.params.orderId,
+    'SELECT * FROM orders WHERE id=?', req.params.orderId,
+    'INSERT INTO orders(donuts, count, status, droneID, batteryLevel) VALUES (?, ?, ?, ?, ?)'
     function(err, row) {
       if (err) {
         // some unknown SQL error
@@ -141,6 +142,7 @@ app.post('/api/orders/orderId', (req, res) => {
         res.sendStatus(404);
         return;
       }
+
       //now that you have order, update it
       // return the found result
       // res.send(JSON.stringify(row));

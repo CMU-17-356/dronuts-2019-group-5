@@ -124,6 +124,24 @@ export class Order extends React.Component<OrderProps, OrderState> {
     )
   }
 
+  updateOrderState(id: string) {
+    console.log(this);
+    console.log('boo');
+    // const possibleStatus = {'Ordered', 'Accepted', 'Dispatched', 'Delivered'};
+    //update state and submit a post request postUpdateStatus()
+    return () => { console.log(id); }
+
+    
+    // const updateStatusURL = 'api/orders/:orderID';
+    // let promise = fetch(updateStatusURL, {
+    //    method: 'POST',
+    // //   body: `companyId=5&amount=${(totalPrice / 100).toFixed(2)}`,
+    // //   headers: {
+    //     "Content-Type": "application/x-www-form-urlencoded",
+    //   },
+    // });
+  }  
+  
 
   renderAnOrder(anOrder: OrderInterface) {
     const {
@@ -143,7 +161,8 @@ export class Order extends React.Component<OrderProps, OrderState> {
         <td>{status}</td>
         <td>{droneID}</td>
         <td>{address}</td>
-        <td><button>Update Order Status</button></td>
+        <td><button className="menu-item-quantity-picker-increment" onClick={this.updateOrderState(id)}>Update Order Status</button></td>
+        
       </tr>
     );
   }

@@ -16,6 +16,7 @@ Issue Tracking: https://trello.com/b/0sPIIyJv/17-356-product-backlog
 - CI: Travis CI
 - Google Analytics (group5dronuts@gmail.com)
 - SQLite3
+- MAPQuest API
 
 ## References
 - Microsoft's [TypeScript-React-Starter](https://github.com/Microsoft/TypeScript-React-Starter)
