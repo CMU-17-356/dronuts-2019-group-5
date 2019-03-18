@@ -1,12 +1,14 @@
 BEGIN TRANSACTION;
 CREATE TABLE IF NOT EXISTS "orders" (
 	"id"	INTEGER NOT NULL DEFAULT 1 PRIMARY KEY AUTOINCREMENT,
-	"donuts"	TEXT NOT NULL DEFAULT 'Chocoloate glazed',
-	"count"	INTEGER NOT NULL DEFAULT 1,
-	"timestamp"	TEXT NOT NULL DEFAULT '2008-09-15T15:53:00',
-	"status"	TEXT NOT NULL DEFAULT 'In Progress',
+	"donuts"	TEXT NOT NULL DEFAULT '{"Original Glazed":1}',
+	"timestamp"	INTEGER NOT NULL DEFAULT 1552937288,
+	"status"	TEXT NOT NULL DEFAULT 'Ordered',
 	"droneID"	TEXT NOT NULL DEFAULT 'XKEDFG',
-	"batteryLevel"	TEXT NOT NULL DEFAULT '100%'
+	"address"	TEXT NOT NULL DEFAULT '"location": {
+    "lat": 40.44394444,
+    "lng": -79.94444444
+  }'
 );
 CREATE TABLE IF NOT EXISTS "donuts" (
 	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -17,10 +19,22 @@ CREATE TABLE IF NOT EXISTS "donuts" (
 	"imageUrl"	TEXT DEFAULT "https://cmu-17-356.github.io/Dronuts/assets/donut_flavors/original_glaze.jpg",
 	"ingredients"	TEXT
 );
-INSERT INTO "orders" VALUES (1,'Original Glazed',1,'2019-03-15T15:53:00','In Progress','XKEDFY','80%');
-INSERT INTO "orders" VALUES (2,'Chocoloate glazed',3,'2019-02-17T15:53:00','Delivered','XLEBFG','100%');
-INSERT INTO "orders" VALUES (3,'Chocoloate glazed',1,'2019-03-20T15:53:00','Incoming','XKEDHI','99%');
-INSERT INTO "orders" VALUES (4,'Chocoloate glazed',1,'2019-03-15T15:54:00','In Progress','XKEDFG','100%');
+INSERT INTO "orders" VALUES (1,'''{"Original Glazed":2}''',1552937299000,'Accepted','XKEDFY','"location": {
+    "lat": 40.44394444,
+    "lng": -79.94444444
+  }');
+INSERT INTO "orders" VALUES (2,'''{"Chocolate Glazed":3}''',1552937499000,'Delivered','XLEBFG','"location": {
+    "lat": 40.44394444,
+    "lng": -79.94444444
+  }');
+INSERT INTO "orders" VALUES (3,'''{"Original Glazed":3}''',1552937399000,'Ordered','XKEDHI','"location": {
+    "lat": 40.44394444,
+    "lng": -79.94444444
+  }');
+INSERT INTO "orders" VALUES (4,'''{"Original Glazed":5}''',1552937799000,'Dispatched','XKEDFG','"location": {
+    "lat": 40.44394444,
+    "lng": -79.94444444
+  }');
 INSERT INTO "donuts" VALUES (1,'Original Glazed',100,1,1,'https://cmu-17-356.github.io/Dronuts/assets/donut_flavors/original_glaze.jpg',NULL);
 INSERT INTO "donuts" VALUES (2,'Chocolate Glazed',150,1,1,'https://cmu-17-356.github.io/Dronuts/assets/donut_flavors/chocolate_glaze.jpg',NULL);
 INSERT INTO "donuts" VALUES (3,'Jelly',200,1,1,'https://cmu-17-356.github.io/Dronuts/assets/donut_flavors/jelly.jpg',NULL);
