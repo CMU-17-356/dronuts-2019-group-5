@@ -17,4 +17,5 @@ RUN npm run init-db
 
 EXPOSE 80
 EXPOSE 3000
+EXPOSE 3001
 CMD [ "npm", "start" ]
