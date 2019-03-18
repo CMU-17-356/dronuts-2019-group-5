@@ -33,7 +33,7 @@ const correctAirbase = {
     "lng": 0
   },
   "drones": [
-    "string"
+    0
   ]
 }
 
@@ -72,7 +72,7 @@ const correctDrone = {
       "lat": 0,
       "lng": 0
     },
-    "status": "in route",
+    "status": "in_route",
     "route": {
       "time_start": "2019-02-12T22:11:46.051Z",
       "time_arrive": "2019-02-12T22:11:46.051Z",
