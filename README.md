@@ -15,6 +15,7 @@ Issue Tracking: https://trello.com/b/0sPIIyJv/17-356-product-backlog
 - Dependency Management: Greenkeeper
 - CI: Travis CI
 - Google Analytics (group5dronuts@gmail.com)
+- SQLite3
 
 ## References
 - Microsoft's [TypeScript-React-Starter](https://github.com/Microsoft/TypeScript-React-Starter)
@@ -27,6 +28,8 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 ## Available Scripts
 
 In the project directory, you can run:
+
+### `npm run init-db` to initialize the database
 
 ### `npm start`
 

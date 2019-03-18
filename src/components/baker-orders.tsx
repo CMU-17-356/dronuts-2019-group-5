@@ -17,6 +17,7 @@ export interface OrderInterface {
   id: string;
   donuts: string;
   count: number;
+  timestamp: string;
   status: string;
   droneID: string;
   batteryLevel: string;
@@ -59,7 +60,7 @@ export class Order extends React.Component<OrderProps, OrderState> {
 
   handleClick() {
 
-      let newOrder: OrderInterface = {id: "5", donuts: "Rainbow Sprinkles", count: 3, status: "Delivered", droneID: "XHF43", batteryLevel: "82%"};
+      let newOrder: OrderInterface = {id: "5", donuts: "Rainbow Sprinkles", count: 3, timestamp: "2019-02-17T15:54:00", status: "Delivered", droneID: "XHF43", batteryLevel: "82%"};
 
       this.setState(prevState => ({
         orders: {
@@ -127,6 +128,7 @@ export class Order extends React.Component<OrderProps, OrderState> {
       id,
       donuts,
       count,
+      timestamp,
       status,
       droneID,
       batteryLevel
@@ -137,6 +139,7 @@ export class Order extends React.Component<OrderProps, OrderState> {
         <td>{id}</td>
         <td>{donuts}</td>
         <td>{count}</td>
+        <td>{timestamp}</td>
         <td>{status}</td>
         <td>{droneID}</td>
         <td>{batteryLevel}</td>
