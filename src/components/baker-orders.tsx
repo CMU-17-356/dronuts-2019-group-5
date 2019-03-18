@@ -87,7 +87,9 @@ export class Order extends React.Component<OrderProps, OrderState> {
   render() {
     return (
       <div>
+
         {this.renderAllOrders()}
+        <button>Show only Incoming orders</button>
       </div>
     );
   }
@@ -99,6 +101,7 @@ export class Order extends React.Component<OrderProps, OrderState> {
       (anOrderKey: string) => this.renderAnOrder(this.state.orders[anOrderKey])
       );
 
+    //if status equals incoming, then call renderAnOrder
 
     return (
       <div className="menu-cart-container">
@@ -109,15 +112,15 @@ export class Order extends React.Component<OrderProps, OrderState> {
                 <th>Order ID</th>
                 <th>Items</th>
                 <th>Quantity</th> 
+                <th>Timestamp</th> 
                 <th>Status</th>
                 <th>Drone ID</th>
-                <th>Battery</th>
-                
-               </tr>
+                <th>Battery</th> 
+              </tr>
                 {allOrders}
               </tbody>
           </table>
-      <button onClick={this.handleClick.bind(this)}>New order</button>
+      {/*<button onClick={/*this.handleClick.bind(this)}>New order</button> */}
       </div>
     )
   }
@@ -143,6 +146,7 @@ export class Order extends React.Component<OrderProps, OrderState> {
         <td>{status}</td>
         <td>{droneID}</td>
         <td>{batteryLevel}</td>
+        <button>Update Order Status</button>
       </tr>
     );
   }
