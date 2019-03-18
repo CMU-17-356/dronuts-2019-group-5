@@ -11,8 +11,11 @@ RUN npm install
 # Copy App Source and Dependencies
 COPY . .
 
-#TODO Run any build scripts here
+# Run any build scripts here
+RUN apk update && apk add sqlite
+RUN npm run init-db
 
 EXPOSE 80
 EXPOSE 3000
+EXPOSE 3001
 CMD [ "npm", "start" ]
