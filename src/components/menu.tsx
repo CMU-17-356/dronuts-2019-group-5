@@ -196,6 +196,11 @@ export class Menu extends React.Component<MenuProps, MenuState> {
     return (
       <div className="cart-container">
         <h1 className="cart-title">Cart</h1>
+        <form>
+        Address:
+        <input type="text" name="address">
+        </input>
+        </form>
         <table className="cart">
           <tbody>
             {cartItems}
@@ -210,7 +215,7 @@ export class Menu extends React.Component<MenuProps, MenuState> {
           </tfoot>
         </table>
 
-        <button className="checkout-button" onClick={this.payForCart(totalPrice)} disabled={this.state.transaction.status !== TransactionStatus.NotStarted}>Check Out</button>
+        <button className="checkout-button" onClick={getLatLong(address)} disabled={this.state.transaction.status !== TransactionStatus.NotStarted}>Check Out</button>
       </div>
     )
   }
@@ -308,7 +313,20 @@ async function createTransaction(totalPrice: number) {
 
   let response = await promise;
   let result = await response.json();
-  return result;
+  return result; 
 }
 
+async function getLatLong(address: string) {
+  return () => {
+      const createUrl = `http://www.mapquestapi.com/geocoding/v1/address?key=UCHKCIWSQr5GIL7PnrXLXuso9d0NXq5Y&location=${address}`;
+
+      let promise = fetch(createUrl);
+      let response = await promise;
+      let result = await response.json();
+      debugger;
+  return result;
+  }
+}
+
+    
 export default Menu;
