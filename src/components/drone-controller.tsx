@@ -116,8 +116,8 @@ export class DroneController extends React.Component<DroneControllerProps, Drone
 
   sendDrone(droneId: string) {
     // todo: read these from the state of the form
-    const lat = 40.44394444;
-    const lng = -79.94445;
+    const lat = 40.45;
+    const lng = -79.95;
     return async () => {
       const result = await sendDrone(droneId, lat, lng);
       if (!result.ok) {

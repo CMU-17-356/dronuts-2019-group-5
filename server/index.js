@@ -104,8 +104,8 @@ app.post('/api/orders', (req, res) => {
   console.log(req.body)
   db.run(
     //start with donuts row, id handled automatically
-    'INSERT INTO orders(donuts, count, status, droneID, batteryLevel) VALUES (?, ?, ?, ?, ?)',
-    req.body.donuts, req.body.count, req.body.status, req.body.droneID, req.body.batteryLevel,
+    'INSERT INTO orders(donuts, timestamp, status, droneID, address) VALUES (?, ?, ?, ?, ?)',
+    [JSON.stringify(req.body.donuts), req.body.timestamp, req.body.status, req.body.droneID, JSON.stringify(req.body.address)],
     function(err) {
       if (err) {
         // probably some schema has been violated, log and return the error

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ChangeEvent, FormEvent } from 'react';
 import { createTransactionResponse, getTransactionInfoResponse } from '../models/credit';
-import { formatPrice, getDonuts, getUrl, createOrder } from './helpers';
+import { formatPrice, getDonuts, getUrl, createOrder, getValidDroneId } from './helpers';
 import './menu.css';
 
 // Michael Shillingburg via https://giphy.com/gifs/spinning-donuts-donut-l4KhY0teBwlTWKTra
@@ -31,6 +31,11 @@ export interface MenuProps {
   items: MenuItemProps[];
 }
 
+export interface OrderStatusProps {
+  error?: string;
+  id?: string;
+}
+
 export interface MenuState {
   items: MenuItemProps[];
   cart: {
@@ -43,7 +48,9 @@ export interface MenuState {
   };
   address: string;
   lat: number;
-  lng: number
+  lng: number;
+
+  order?: OrderStatusProps;
 }
 
 export class Menu extends React.Component<MenuProps, MenuState> {
@@ -57,7 +64,7 @@ export class Menu extends React.Component<MenuProps, MenuState> {
         url: '',
         status: TransactionStatus.NotStarted,
       },
-      address: "",
+      address: '5032 Forbes Avenue, Pittsburgh',
       lat: 40.444205,
       lng: -79.941556,
     };
@@ -84,7 +91,6 @@ export class Menu extends React.Component<MenuProps, MenuState> {
         cart: this.initCart(items)
       })
       );
-      console.log(items);
     }, 500);
   }
 
@@ -93,8 +99,22 @@ export class Menu extends React.Component<MenuProps, MenuState> {
       <div className="menu-cart-container">
         {this.renderMenu()}
         {this.renderCart()}
+        {this.renderOrder()}
       </div>
     );
+  }
+
+  renderOrder() {
+    if (!this.state.order) {
+      return <div>No active order</div>;
+    }
+
+    return (
+      <div className="order-container">
+        <div>Order: {this.state.order.error ? this.state.order.error
+                                           : `Order ID: ${this.state.order.id}`}</div>
+      </div>
+    )
   }
 
   renderMenu() {
@@ -130,7 +150,7 @@ export class Menu extends React.Component<MenuProps, MenuState> {
     }
 
     if (transaction.value.status != TransactionStatus.Pending) {
-      // Status has resolved, stop polling
+      // Status has resolved, stop polling the transaction
       window.clearInterval(this.state.transaction.poller)
       this.setState(prevState => ({
         ...prevState,
@@ -143,20 +163,38 @@ export class Menu extends React.Component<MenuProps, MenuState> {
 
       if (transaction.value.status === TransactionStatus.Approved) {
         // check for a drone to assign
+        const droneId = await getValidDroneId();
+        if (!droneId) {
+          console.log("error");
+          this.setState(prevState => ({
+            ...prevState,
+            order: {
+              error: 'No available drone. Please try again later.',
+            }
+          }));
+          return;
+        }
 
-
-        await this.createOrderFromCart(this.state.cart);
+        const order = await this.createOrderFromCart(this.state.cart, droneId as any);
+        this.setState(prevState => ({
+          ...prevState,
+          order: {
+            ...prevState.order,
+            id: order.id,
+          }
+        }));
+        console.log("Successful order creation for " + order.id);
       }
     }
   }
 
-  async createOrderFromCart(cart: { [key: string]: CartItemProps }) {
+  async createOrderFromCart(cart: { [key: string]: CartItemProps }, droneID: number) {
     const donuts = cartToOrderDonuts(cart);
-    await createOrder({
+    return await createOrder({
       donuts: donuts,
       timestamp: (new Date).getTime(),
       status: "Ordered",
-      droneID: null,
+      droneID: droneID,
       address: {
         lat: this.state.lat,
         lng: this.state.lng,
@@ -267,7 +305,7 @@ export class Menu extends React.Component<MenuProps, MenuState> {
           </tfoot>
         </table>
 
-        <button className="checkout-button" onClick={(event) => { this.payForCart(totalPrice)(); this.getLatLong(this.state.address)(); }} disabled={this.state.transaction.status !== TransactionStatus.NotStarted}>Check Out</button>
+        <button className="checkout-button" onClick={(event) => { this.payForCart(totalPrice)(); this.getLatLong(this.state.address)(); }} disabled={this.state.transaction.status === TransactionStatus.Pending}>Check Out</button>
       </div>
     )
   }
@@ -374,7 +412,7 @@ function cartToOrderDonuts(cart: { [key: string]: CartItemProps }) {
   let orderDonuts: { [key: string]: number } = {};
   for (let donut of Object.values(cart)) {
     if (donut.quantity > 0) {
-      orderDonuts[donut.name] = orderDonuts[donut.quantity];
+      orderDonuts[donut.name] = donut.quantity;
     }
   }
   return orderDonuts;

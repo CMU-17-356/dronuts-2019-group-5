@@ -1,3 +1,5 @@
+import { getAirbaseResponse, getDroneInfoResponse, IDrone } from '../../models/drone';
+
 export function formatPrice(priceInCents: number): string {
   return `$${(priceInCents / 100).toFixed(2)}`;
 }
@@ -61,6 +63,32 @@ export function getAirbase() {
   const airbaseName = 'group5';
   const getAirbaseUrl = `http://drones.17-356.isri.cmu.edu/api/airbases/${airbaseName}`;
   return getUrl(getAirbaseUrl);
+}
+
+export async function getValidDroneId() {
+  let response = await getAirbase();
+  const airbase = getAirbaseResponse.validate(response);
+  if (airbase.error) {
+    console.log(airbase.error);
+    return;
+  }
+
+  for (let droneId of airbase.value.drones) {
+    response = await getDrone(droneId);
+    let d = getDroneInfoResponse.validate(response);
+    if (d.error) {
+      continue;
+    }
+
+    let drone = d.value as IDrone;
+
+    if (drone.current_delivery === null ||
+        drone.current_delivery.status !== 'in_route') {
+          return drone.id;
+    }
+  }
+
+  return null;
 }
 
 export async function sendDrone(droneId: string, lat: number, lng: number) {
