@@ -10,7 +10,7 @@ export interface DroneControllerProps {
 
 export interface DroneControllerState {
   ready: boolean;
-  droneIds: string[];
+  droneIds: number[];
   drones: {
     [key: string]: IDrone;
   };
@@ -114,7 +114,7 @@ export class DroneController extends React.Component<DroneControllerProps, Drone
     );
   }
 
-  sendDrone(droneId: string) {
+  sendDrone(droneId: number) {
     // todo: read these from the state of the form
     const lat = 40.45;
     const lng = -79.95;
@@ -131,7 +131,7 @@ export class DroneController extends React.Component<DroneControllerProps, Drone
     };
   }
 
-  renderDrone(droneId: string) {
+  renderDrone(droneId: number) {
     return (
       <div key={droneId}>
         {JSON.stringify(this.state.drones[droneId], null, 2)}

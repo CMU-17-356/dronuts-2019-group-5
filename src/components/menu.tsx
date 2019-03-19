@@ -1,11 +1,14 @@
 import * as React from 'react';
 import { ChangeEvent, FormEvent } from 'react';
 import { createTransactionResponse, getTransactionInfoResponse } from '../models/credit';
-import { formatPrice, getDonuts, getUrl, createOrder, getValidDroneId } from './helpers';
+import { getDroneInfoResponse } from '../models/drone';
+
+import { formatPrice, getDonuts, getUrl, createOrder, getValidDroneId, getDrone } from './helpers';
 import './menu.css';
 
 // Michael Shillingburg via https://giphy.com/gifs/spinning-donuts-donut-l4KhY0teBwlTWKTra
 import spinner from './donutSpinner.gif';
+import { IDrone } from '../models/drone';
 
 enum TransactionStatus {
   NotStarted = "not started",
@@ -33,7 +36,12 @@ export interface MenuProps {
 
 export interface OrderStatusProps {
   error?: string;
-  id?: string;
+  id?: number;
+  status?: string;
+  droneID?: number;
+  drone?: IDrone;
+  orderPoller?: number;
+  dronePoller?: number;
 }
 
 export interface MenuState {
@@ -106,15 +114,41 @@ export class Menu extends React.Component<MenuProps, MenuState> {
 
   renderOrder() {
     if (!this.state.order) {
-      return <div>No active order</div>;
+      return <div />;
+    }
+
+    if (this.state.order.error) {
+      return (
+        <div className="order-container">
+          <div>Error: {this.state.order.error}</div>
+        </div>);
     }
 
     return (
       <div className="order-container">
-        <div>Order: {this.state.order.error ? this.state.order.error
-                                           : `Order ID: ${this.state.order.id}`}</div>
+        <h1 className="menu-title">Order Status</h1>
+        <div>ID: {this.state.order.id}</div>
+        <div>Status: {this.state.order.status}</div>
+        <div>DroneID: {this.state.order.droneID}</div>
+        {this.renderDrone()}
       </div>
     )
+  }
+
+  renderDrone() {
+    if (!this.state.order || !this.state.order.drone) {
+      return ''
+    }
+    const drone = this.state.order.drone;
+    return (
+      <div className="drone-container">
+        <div>Destination: {drone.current_delivery.destination.lat}, {drone.current_delivery.destination.lng}</div>
+        <div>Location: {drone.current_delivery.destination.lat}, {drone.current_delivery.destination.lng}</div>
+        <div>Departed at: {drone.current_delivery.route.time_start.toString()}</div>
+        {drone.battery && <div>Battery: {drone.battery.charge} / {drone.battery.capacity} </div>}
+        <div>Status: {drone.current_delivery.status} </div>
+      </div>
+    );
   }
 
   renderMenu() {
@@ -181,11 +215,121 @@ export class Menu extends React.Component<MenuProps, MenuState> {
           order: {
             ...prevState.order,
             id: order.id,
+            droneID: droneId,
           }
         }));
+
+        this.startOrderPolling()
         console.log("Successful order creation for " + order.id);
       }
     }
+  }
+
+  startOrderPolling() {
+    this.setState(prevState => ({
+      ...prevState,
+      order: {
+        ...prevState.order,
+        orderPoller: window.setInterval(this.checkOrderStatus.bind(this), 3000),
+      }
+    }));
+  }
+
+  startDronePolling() {
+    this.setState(prevState => ({
+      ...prevState,
+      order: {
+        ...prevState.order,
+        dronePoller: window.setInterval(this.checkDroneStatus.bind(this), 3000),
+      }
+    }));
+  }
+
+  async checkOrderStatus() {
+    console.log("Polling order...");
+    if (!this.state.order || this.state.order.error) {
+      return;
+    }
+
+    const response = await fetch(`/api/orders/${this.state.order.id}`);
+    if (!response.ok) {
+      console.log(response);
+      return;
+    }
+    const order = await response.json();
+    this.setState(prevState => ({
+      ...prevState,
+      order: {
+        ...prevState.order,
+        status: order.status,
+      },
+    }))
+
+    if (order.status === 'Dispatched') {
+      this.stopOrderPolling()
+      this.startDronePolling()
+    }
+  }
+
+  stopOrderPolling() {
+    if (!this.state.order) {
+      return;
+    }
+
+    // No need to poll anymore, since the delivered change comes from here
+    window.clearInterval(this.state.order.orderPoller);
+    this.setState(prevState => ({
+      ...prevState,
+      order: {
+        ...prevState.order,
+        orderPoller: undefined,
+      }
+    }))
+  }
+
+  async checkDroneStatus() {
+    console.log("Polling drone...");
+    if (!this.state.order || this.state.order.error || !this.state.order.droneID) {
+      return;
+    }
+
+    const response = await getDrone(this.state.order.droneID);
+    const d = getDroneInfoResponse.validate(response);
+    if (d.error) {
+      console.log(response);
+      console.log(d.error);
+    }
+
+    const drone = d.value as IDrone;
+    this.setState(prevState => ({
+      ...prevState,
+      order: {
+        ...prevState.order,
+        drone: drone,
+      }
+    }));
+
+    if (drone.current_delivery.status === 'success') {
+      this.stopDronePolling()
+
+      // TODO: update the status of the order in db
+    }
+  }
+
+  stopDronePolling() {
+    if (!this.state.order) {
+      return;
+    }
+
+    // No need to poll anymore, since the delivered change comes from here
+    window.clearInterval(this.state.order.dronePoller);
+    this.setState(prevState => ({
+      ...prevState,
+      order: {
+        ...prevState.order,
+        dronePoller: undefined,
+      }
+    }))
   }
 
   async createOrderFromCart(cart: { [key: string]: CartItemProps }, droneID: number) {

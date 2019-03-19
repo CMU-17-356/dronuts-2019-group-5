@@ -58,6 +58,10 @@ export interface IDrone {
   drone_name: string;
   location: IGeoPoint;
   current_delivery: IDelivery;
+  battery?: {
+    capacity: number;
+    charge: number;
+  }
 }
 
 /*

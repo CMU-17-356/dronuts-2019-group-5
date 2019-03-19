@@ -54,7 +54,7 @@ export async function createOrder(orderObject: any) {
   return result;
 }
 
-export function getDrone(id: string) {
+export function getDrone(id: number) {
   const getDroneUrl = `http://drones.17-356.isri.cmu.edu/api/drones/${id}`;
   return getUrl(getDroneUrl);
 }
@@ -91,7 +91,7 @@ export async function getValidDroneId() {
   return null;
 }
 
-export async function sendDrone(droneId: string, lat: number, lng: number) {
+export async function sendDrone(droneId: number, lat: number, lng: number) {
   const sendDroneUrl = `http://drones.17-356.isri.cmu.edu/api/drones/${droneId}/send`;
   let promise = fetch(sendDroneUrl, {
     method: 'PUT',
