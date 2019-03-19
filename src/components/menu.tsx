@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ChangeEvent, FormEvent } from 'react';
 import { createTransactionResponse, getTransactionInfoResponse } from '../models/credit';
-import { formatPrice, getDonuts, getUrl } from './helpers';
+import { formatPrice, getDonuts, getUrl, createOrder } from './helpers';
 import './menu.css';
 
 // Michael Shillingburg via https://giphy.com/gifs/spinning-donuts-donut-l4KhY0teBwlTWKTra
@@ -142,10 +142,26 @@ export class Menu extends React.Component<MenuProps, MenuState> {
       }));
 
       if (transaction.value.status === TransactionStatus.Approved) {
-        // add a new order to the database
+        // check for a drone to assign
 
+
+        await this.createOrderFromCart(this.state.cart);
       }
     }
+  }
+
+  async createOrderFromCart(cart: { [key: string]: CartItemProps }) {
+    const donuts = cartToOrderDonuts(cart);
+    await createOrder({
+      donuts: donuts,
+      timestamp: (new Date).getTime(),
+      status: "Ordered",
+      droneID: null,
+      address: {
+        lat: this.state.lat,
+        lng: this.state.lng,
+      },
+    });
   }
 
   startTransactionPolling(transactionId: number) {
@@ -354,6 +370,15 @@ async function createTransaction(totalPrice: number) {
   return result;
 }
 
+function cartToOrderDonuts(cart: { [key: string]: CartItemProps }) {
+  let orderDonuts: { [key: string]: number } = {};
+  for (let donut of Object.values(cart)) {
+    if (donut.quantity > 0) {
+      orderDonuts[donut.name] = orderDonuts[donut.quantity];
+    }
+  }
+  return orderDonuts;
+}
 
 
 

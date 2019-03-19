@@ -1,5 +1,3 @@
-import {CartItemProps} from '../menu';
-
 export function formatPrice(priceInCents: number): string {
   return `$${(priceInCents / 100).toFixed(2)}`;
 }
@@ -34,8 +32,9 @@ export function getDonuts() {
 export function getOrders(time: number) {
   const getOrdersUrl = '/api/orders?time=' + time;
   return getUrl(getOrdersUrl);
+}
 
-export async function createOrder(orderObject: {[key: string]: CartItemProps}) {
+export async function createOrder(orderObject: any) {
   const createTransactionUrl = '/api/orders'
   let promise = fetch(createTransactionUrl, {
     method: 'POST',
