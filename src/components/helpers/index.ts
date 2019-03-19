@@ -45,6 +45,34 @@ export async function createOrder(orderObject: any) {
   });
 
   let response = await promise;
+  if (!response.ok) {
+    console.log(response);
+  }
   let result = await response.json();
   return result;
+}
+
+export function getDrone(id: string) {
+  const getDroneUrl = `http://drones.17-356.isri.cmu.edu/api/drones/${id}`;
+  return getUrl(getDroneUrl);
+}
+
+export function getAirbase() {
+  const airbaseName = 'group5';
+  const getAirbaseUrl = `http://drones.17-356.isri.cmu.edu/api/airbases/${airbaseName}`;
+  return getUrl(getAirbaseUrl);
+}
+
+export async function sendDrone(droneId: string, lat: number, lng: number) {
+  const sendDroneUrl = `http://drones.17-356.isri.cmu.edu/api/drones/${droneId}/send`;
+  let promise = fetch(sendDroneUrl, {
+    method: 'PUT',
+    body: `lat=${lat}&lon=${lng}`,
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+  });
+
+  let response = await promise;
+  return response;
 }
