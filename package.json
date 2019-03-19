@@ -55,7 +55,7 @@
   ],
   "devDependencies": {
     "@types/clone": "^0.1.30",
-    "@types/enzyme": "^3.1.17",
+    "@types/enzyme": "^3.9.1",
     "@types/enzyme-adapter-react-16": "^1.0.3",
     "@types/react-router-dom": "^4.3.1",
     "clone": "^2.1.2",
