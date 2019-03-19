@@ -449,7 +449,7 @@ export class Menu extends React.Component<MenuProps, MenuState> {
           </tfoot>
         </table>
 
-        <button className="checkout-button" onClick={(event) => { this.payForCart(totalPrice)(); this.getLatLong(this.state.address)(); }} disabled={this.state.transaction.status === TransactionStatus.Pending}>Check Out</button>
+        <button className="checkout-button" onClick={(event) => { this.payForCart(totalPrice)(); this.getLatLong(this.state.address)(); }} disabled={this.state.transaction.status === TransactionStatus.Pending || this.state.transaction.status === TransactionStatus.Approved}>Check Out</button>
       </div>
     )
   }
