@@ -148,7 +148,7 @@ export class Order extends React.Component<OrderProps, OrderState> {
     );
   }
 
-  beginUpdateState(id: string, status: string) {
+  beginUpdateStatus(id: string, status: string) {
     // const nextStatus = {
     //   'Ordered': 'Accepted',
     //   'Accepted': 'Dispatched',
@@ -179,6 +179,15 @@ export class Order extends React.Component<OrderProps, OrderState> {
     }
   }
 
+  finishUpdateStatus() {
+    const orders: OrderInterface[] = getOrders(time);
+    const lastTime = this.getLastTime(orders);
+     //update state
+    this.setState((prevState) => ({
+      ...prevState,
+      orders: orders,
+    }));
+  }
 
 
   renderAnOrder(anOrder: OrderInterface) {
@@ -218,20 +227,15 @@ async function updateOrderStatus(id: string, status: string) {
     });
 
     let response = await promise;
-    console.log(response);
+    // console.log('response is ' + response);
     let result = await response.json();
-
+    // console.log('result is ' + response);
     //given im using PUT, result should be the updaed order object, which then can be used to update state
+    console.log('getting here');
+    
+    finishUpdateStatus();
+
     return result;
-
-    //update state
-    // this.setState((prevState) => ({
-    //   ...prevState,
-    //   orders:
-    //   lastTime:
-    // }));
-
-
   }
 
 
