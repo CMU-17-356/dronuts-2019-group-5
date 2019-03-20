@@ -25,6 +25,7 @@ export interface OrderInterface {
 export interface OrderState {
   orders: OrderInterface[];
   lastTime: number;
+  firstTime: number;
   poller?: number;
   notificationDOMRef: any;
 }
@@ -39,6 +40,7 @@ export class Order extends React.Component<OrderProps, OrderState> {
       this.state = {
         orders: [], //should this be this.props.orders? does it matter?
         lastTime: 0,
+        firstTime: 0,
         poller: undefined,
         notificationDOMRef: React.createRef(),
       };
@@ -50,10 +52,12 @@ export class Order extends React.Component<OrderProps, OrderState> {
     console.log(orders);
     // debugger;
     const lastTime = this.getLastTime(orders);
+    const firstTime = this.getFirstTime(orders);
     this.setState((prevState) => ({
         ...prevState,
         orders: orders,
         lastTime: lastTime,
+        firstTime: firstTime,
       })
     );
     if (!this.state.poller) {
@@ -68,6 +72,16 @@ export class Order extends React.Component<OrderProps, OrderState> {
     if (this.state.poller) {
       window.clearInterval(this.state.poller)
     }
+  }
+
+  getFirstTime(orders: OrderInterface[]) {
+    let firstTime = this.state.firstTime;
+    for (let o of orders) {
+      if (o.timestamp < firstTime) {
+        firstTime = o.timestamp;
+      }
+    }
+    return firstTime;
   }
 
   getLastTime(orders: OrderInterface[]) {
@@ -149,44 +163,31 @@ export class Order extends React.Component<OrderProps, OrderState> {
   }
 
   beginUpdateStatus(id: string, status: string) {
-    // const nextStatus = {
-    //   'Ordered': 'Accepted',
-    //   'Accepted': 'Dispatched',
-    //   'Dispatched': 'Delivered'
-    // console.log(nextStatus[status]);
-
     //the drone should handle dispatched to delivered
-
     return () => {
-      console.log(id);
-      console.log(status,this.state);
+      //console.log(id);
+      //console.log(status,this.state);
       if (status == 'Ordered') {
-        console.log('status was '  + status);
+        //console.log('status was '  + status);
         status = 'Accepted';
-        console.log('status is now '  + status);
+        //console.log('status is now '  + status);
       }
       else if (status == 'Accepted') {
         status = 'Dispatched';
       }
       else // don't update status b/c baker shouldn't be updating it if its anything else besides ordered or accepted
         status = status;
-
-
-      console.log(status,this.state);
-
+      //console.log(status,this.state);
       this.updateOrderStatus(id, status);
 
     }
   }
 
-  finishUpdateStatus() {
-    const time = (new Date).getTime() - 60*60*24*1000; //orders within the last hour
-    const orders: OrderInterface[] = getOrders(time) as any;
-    const lastTime = this.getLastTime(orders);
-     //update state
+  async finishUpdateStatus() {
+    const orders: any = await getOrders(this.state.firstTime - 1);
     this.setState((prevState) => ({
       ...prevState,
-      orders: orders,
+      orders: orders
     }));
   }
 
@@ -214,7 +215,7 @@ export class Order extends React.Component<OrderProps, OrderState> {
   }
 
 
-  renderAnOrder(anOrder: OrderInterface) {
+  renderAnOrder(anOrder: OrderInterface ) {
     const {
       id,
       donuts,

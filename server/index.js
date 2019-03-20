@@ -100,12 +100,6 @@ app.post('/api/orders', (req, res) => {
   );
 });
 
-//use to update an order
-//post is for creating new resource
-//put is for updating resource
-
-//use postman to check put request - in the put reuqest have the order json
-//
 
 app.put('/api/orders/:orderId', (req, res) => {
   console.log('Received a request at' + (new Date).getTime());
@@ -136,9 +130,7 @@ app.put('/api/orders/:orderId', (req, res) => {
       res.status(200);
       res.send(JSON.stringify({ 'status': orderStatus }));
 
-      //now that you have order, update it
-      //return the found result
-      //res.send(JSON.stringify(row));
+      
     }
   );
 });
