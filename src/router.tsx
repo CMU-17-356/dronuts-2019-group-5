@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Route, HashRouter, Switch } from 'react-router-dom';
-import { Hello, Menu, Header, Order, Inventory } from './components';
+import { Hello, Menu, Header, Order, Inventory, DroneController } from './components';
 
 export const AppRouter: React.StatelessComponent<{}> = () => {
   return (
@@ -20,6 +20,7 @@ export const AppRouter: React.StatelessComponent<{}> = () => {
           <Route path="/menu" render={(props) =>
             <Menu {...props} items={[]} />
           } />
+          <Route path="/drone-controller" render={(props) => <DroneController {...props} />} />
         </Switch>
       </div>
     </HashRouter>

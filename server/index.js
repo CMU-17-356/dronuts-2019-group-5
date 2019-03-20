@@ -47,7 +47,6 @@ app.get('/api/donuts/:donutId', (req, res) => {
 });
 
 app.post('/api/donuts', (req, res) => {
-  console.log(req.body)
   db.run(
     'INSERT INTO donuts(name, priceInCents, available, display, imageUrl, ingredients) VALUES (?, ?, ?, ?, ?, ?)',
     req.body.name, req.body.priceInCents, req.body.available, req.body.display, req.body.imageUrl, req.body.ingredients,
@@ -79,11 +78,10 @@ app.get('/api/orders', (req, res) => {
 
 //use this when creating a new order
 app.post('/api/orders', (req, res) => {
-  console.log(req.body)
   db.run(
     //start with donuts row, id handled automatically
-    'INSERT INTO orders(donuts, count, status, droneID, batteryLevel) VALUES (?, ?, ?, ?, ?)',
-    req.body.donuts, req.body.count, req.body.status, req.body.droneID, req.body.batteryLevel,
+    'INSERT INTO orders(donuts, timestamp, status, droneID, address) VALUES (?, ?, ?, ?, ?)',
+    [JSON.stringify(req.body.donuts), req.body.timestamp, req.body.status, req.body.droneID, JSON.stringify(req.body.address)],
     function(err) {
       if (err) {
         // probably some schema has been violated, log and return the error
@@ -101,6 +99,7 @@ app.post('/api/orders', (req, res) => {
 });
 
 
+
 app.put('/api/orders/:orderId', (req, res) => {
   console.log('Received a request at' + (new Date).getTime());
 
@@ -108,6 +107,10 @@ app.put('/api/orders/:orderId', (req, res) => {
   console.log(req.body.status);
 
   const orderStatus = req.body.status;
+
+
+//use to update an order
+
 
   db.run(
 

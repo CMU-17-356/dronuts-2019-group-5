@@ -49,8 +49,7 @@ export class Order extends React.Component<OrderProps, OrderState> {
   async componentDidMount() {
     const time = (new Date).getTime() - 60*60*24*1000; //orders within the last hour
     const orders: OrderInterface[] = await getOrders(time);
-    console.log(orders);
-    // debugger;
+
     const lastTime = this.getLastTime(orders);
     const firstTime = this.getFirstTime(orders);
     this.setState((prevState) => ({
@@ -136,8 +135,12 @@ export class Order extends React.Component<OrderProps, OrderState> {
 
   renderAllOrders() {
 
+
     // debugger;
     const allOrders = this.state.orders.map(this.renderAnOrder.bind(this));
+
+    //const allOrders = this.state.orders.map(this.renderAnOrder);
+
 
     //if status equals incoming, then call renderAnOrder
 

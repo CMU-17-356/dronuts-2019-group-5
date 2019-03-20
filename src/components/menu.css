@@ -12,6 +12,11 @@
   width: 400px;
 }
 
+.order-container {
+  grid-column: 2;
+  width: 400px;
+}
+
 h1 {
   margin: auto;
   text-align: center;
