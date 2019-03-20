@@ -172,11 +172,12 @@ export class Order extends React.Component<OrderProps, OrderState> {
     
     
     //how do I make sure this isn't called when page loads? seems super simple but im seeing circles.
-    updateOrderStatus(id, status); 
+    
 
     return () => { 
       console.log(id); 
       console.log(status,this.state);
+      updateOrderStatus(id, status); 
     }
   }
 
@@ -209,7 +210,7 @@ export class Order extends React.Component<OrderProps, OrderState> {
 
 async function updateOrderStatus(id: string, status: string) {
     console.log('BOOO IM IN HERE');
-    const putUrl = 'http://localhost:3001/api/orders/' + id //when I don't have 3001 explicility stated it defaults to 3000, which is wrong no? as express is running on 3001
+    const putUrl = '/api/orders/' + id //when I don't have 3001 explicility stated it defaults to 3000, which is wrong no? as express is running on 3001
     let promise = fetch(putUrl, {
       method: 'PUT',
       body: `{"id":1,"donuts":"'{\"Original Glazed\":2}'","timestamp":1552937299000,"status":"Accepted","droneID":"XKEDFY","address":"\"location\": {\n \"lat\": 40.44394444,\n \"lng\": -79.94444444\n }"}`, //this order object should reflect the updated status, currently hard coded to get initial viability

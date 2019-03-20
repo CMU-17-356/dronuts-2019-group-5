@@ -76,28 +76,6 @@ app.get('/api/orders', (req, res) => {
   })
 });
 
-// app.get('/api/orders/:orderId', (req, res) => {
-//   db.get(
-//     'SELECT * FROM orders where id=?', req.params.orderId,
-//     function(err, row) {
-//       if (err) {
-//         // some unknown SQL error
-//         console.log(err);
-//         res.sendStatus(500);
-//         return;
-//       }
-
-//       if (row === undefined) {
-//         // query executes successfully but no results
-//         res.sendStatus(404);
-//         return;
-//       }
-
-//       // return the found result
-//       res.send(JSON.stringify(row));
-//     }
-//   );
-// });
 
 //use this when creating a new order
 app.post('/api/orders', (req, res) => {
@@ -128,13 +106,13 @@ app.post('/api/orders', (req, res) => {
 
 //use postman to check put request - in the put reuqest have the order json
 //
-app.put('/api/orders/:orderId', (req, res) => {
-  console.log('AND NOW IM IN HERE AHH');
+app.put('/api/orders/', (req, res) => {
+  console.log(req.query.id);
 
   db.run(
     //update the whole order, not just the status and it should give back the whole order
     //'UPDATE INTO orders(status) WHERE id=? VALUES (?)', req.params.orderId, req.body.status,
-    'UPDATE INTO orders WHERE id=? VALUES (?)', req.params.orderId, req.body,
+    'UPDATE INTO orders WHERE id=? VALUES (?)', req.query.id, req.body,
     function(err, row) {
       if (err) {
         // some unknown SQL error

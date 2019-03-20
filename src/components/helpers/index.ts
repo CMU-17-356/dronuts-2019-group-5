@@ -33,3 +33,8 @@ export function getOrders(time: number) {
   const getOrdersUrl = '/api/orders?time=' + time;
   return getUrl(getOrdersUrl);
 }
+
+export function updateOrder(id: string) {
+  const putOrdersUrl = '/api/orders?id=' + id;
+  return getUrl(putOrdersUrl);
+}
