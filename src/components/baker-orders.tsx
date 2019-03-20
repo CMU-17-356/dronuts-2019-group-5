@@ -154,35 +154,36 @@ export class Order extends React.Component<OrderProps, OrderState> {
     //   'Accepted': 'Dispatched',
     //   'Dispatched': 'Delivered'
     // console.log(nextStatus[status]);
-    
+
     //the drone should handle dispatched to delivered
-    if (status == 'Ordered') {
-      console.log('status was '  + status);
-      status = 'Accepted';
-      console.log('status is now '  + status);
-    }
-    else if (status == 'Accepted') {
-      status = 'Dispatched';
-    }
-    else // don't update status b/c baker shouldn't be updating it if its anything else besides ordered or accepted
-      status = status;
 
-    
-    console.log(status,this.state);
-    
-    
-    //how do I make sure this isn't called when page loads? seems super simple but im seeing circles.
-    
-
-    return () => { 
-      console.log(id); 
+    return () => {
+      console.log(id);
       console.log(status,this.state);
-      updateOrderStatus(id, status); 
+      if (status == 'Ordered') {
+        console.log('status was '  + status);
+        status = 'Accepted';
+        console.log('status is now '  + status);
+      }
+      else if (status == 'Accepted') {
+        status = 'Dispatched';
+      }
+      else // don't update status b/c baker shouldn't be updating it if its anything else besides ordered or accepted
+        status = status;
+
+
+      console.log(status,this.state);
+
+
+      //how do I make sure this isn't called when page loads? seems super simple but im seeing circles.
+      // updateOrderStatus(id, status);
+      updateOrderStatus(id, "Wow"); // todo: fixme. This is just to test.
+
     }
   }
 
 
- 
+
   renderAnOrder(anOrder: OrderInterface) {
     const {
       id,
@@ -202,7 +203,7 @@ export class Order extends React.Component<OrderProps, OrderState> {
         <td>{droneID}</td>
         <td>{address}</td>
         <td><button className="menu-item-quantity-picker-increment" onClick={this.beginUpdateState(id, status)}>Update Order Status</button></td>
-        
+
       </tr>
     );
   }
@@ -220,23 +221,25 @@ async function updateOrderStatus(id: string, status: string) {
     });
 
     let response = await promise;
+    console.log(response);
+    debugger;
     let result = await response.json();
-    
+
     //given im using PUT, result should be the updaed order object, which then can be used to update state
     return result;
 
     //update state
     // this.setState((prevState) => ({
     //   ...prevState,
-    //   orders: 
-    //   lastTime: 
+    //   orders:
+    //   lastTime:
     // }));
-      
+
 
   }
 
 
-  
+
   // updateOrderStatus(id: string, status: string) {
   //   let promise = fetch('/api/orders/${id}', {
   //       method: 'PUT',
@@ -244,8 +247,8 @@ async function updateOrderStatus(id: string, status: string) {
 
   //   });
   //     // post to /api/orders/${id} to update status to XX
-  //     // API endpoint: 
-      
+  //     // API endpoint:
+
   //     let response = await promise;
   //     let result = await response.json();
   //     return result;
@@ -256,8 +259,8 @@ async function updateOrderStatus(id: string, status: string) {
   //   //   //update state
   //   //   this.setState((prevState) => ({
   //   //     ...prevState,
-  //   //     orders: 
-  //   //     lastTime: 
+  //   //     orders:
+  //   //     lastTime:
   //   //   }));
   //   // }
 

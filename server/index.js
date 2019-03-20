@@ -106,14 +106,22 @@ app.post('/api/orders', (req, res) => {
 
 //use postman to check put request - in the put reuqest have the order json
 //
-app.put('/api/orders/', (req, res) => {
-  console.log(req.query.id);
+
+app.put('/api/orders/:orderId', (req, res) => {
+  console.log('Received a request at' + (new Date).getTime());
+
+  console.log(req.params.orderId);
+  console.log(req.body);
+
 
   db.run(
     //update the whole order, not just the status and it should give back the whole order
     //'UPDATE INTO orders(status) WHERE id=? VALUES (?)', req.params.orderId, req.body.status,
-    'UPDATE INTO orders WHERE id=? VALUES (?)', req.query.id, req.body,
-    function(err, row) {
+
+    'UPDATE orders SET status=? WHERE id=? ',
+    [JSON.stringify(req.body), req.params.orderId],
+    function(err) {
+
       if (err) {
         // some unknown SQL error
         console.log(err);
@@ -121,11 +129,11 @@ app.put('/api/orders/', (req, res) => {
         return;
       }
 
-      if (row === undefined) {
-        // query executes successfully but no results
-        res.sendStatus(404);
-        return;
-      }
+
+      // See https://github.com/mapbox/node-sqlite3/wiki/API#databaserunsql-param--callback
+      console.log(this.changes);
+
+  
 
       //now that you have order, update it
       //return the found result
