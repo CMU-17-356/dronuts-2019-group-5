@@ -8,6 +8,24 @@ Site: http://40.78.84.106:3000/
 
 Issue Tracking: https://trello.com/b/0sPIIyJv/17-356-product-backlog
 
+## Useful commands
+```shell
+# Local development
+npm run init-db  # Run once to initialize the SQLite database
+npm run server  # Run just the API server
+npm run client  # Run just the React frontend
+npm start  # Run both the server and client together
+npm test  # Run tests
+
+# Local development with Docker Compose
+docker-compose up
+```
+
+## Deployment
+This repo uses [Travis CI](https://travis-ci.com/CMU-17-356/dronuts-2019-group-5) for automated deployments. 
+If a change is merged to master, the build automatically kicks off. 
+On successful builds, the site is deployed to Azure on http://40.78.84.106:3000/.
+
 ## Tools used
 - Create-React-App (Typescript)
 - Linting: ESLint (via Create-React-App)
@@ -15,7 +33,7 @@ Issue Tracking: https://trello.com/b/0sPIIyJv/17-356-product-backlog
 - Dependency Management: Greenkeeper
 - CI: Travis CI
 - Google Analytics (group5dronuts@gmail.com)
-- SQLite3
+- Database: SQLite
 
 ## References
 - Microsoft's [TypeScript-React-Starter](https://github.com/Microsoft/TypeScript-React-Starter)
@@ -24,48 +42,3 @@ Issue Tracking: https://trello.com/b/0sPIIyJv/17-356-product-backlog
 ## Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
-## Available Scripts
-
-In the project directory, you can run:
-
-### `npm run init-db` to initialize the database
-
-### `npm start`
-
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
