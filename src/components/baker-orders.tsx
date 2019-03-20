@@ -145,30 +145,34 @@ export class Order extends React.Component<OrderProps, OrderState> {
           </table>
       {/*<button onClick={/*this.handleClick.bind(this)}>New order</button> */}
       </div>
-    )
+    );
   }
 
   beginUpdateState(id: string, status: string) {
-    const nextStatus = {
-      'Ordered': 'Accepted',
-      'Accepted': 'Dispatched',
-      'Dispatched': 'Delivered'
-
+    // const nextStatus = {
+    //   'Ordered': 'Accepted',
+    //   'Accepted': 'Dispatched',
+    //   'Dispatched': 'Delivered'
+    // console.log(nextStatus[status]);
+    
+    //the drone should handle dispatched to delivered
+    if (status == 'Ordered') {
+      console.log('status was '  + status);
+      status = 'Accepted';
+      console.log('status is now '  + status);
     }
+    else if (status == 'Accepted') {
+      status = 'Dispatched';
+    }
+    else // don't update status b/c baker shouldn't be updating it if its anything else besides ordered or accepted
+      status = status;
 
+    
     console.log(status,this.state);
-    // const doIPost = updateOrderStatus(id, nextStatus[status]) 
-
-    //if post is succesffull, then actually go through and update state
-     // can't have this be inside of updateOrder state directly because this will be called when button is orginally loaded
-    // if (doIPost == success) {
-    //   //update state
-    //   this.setState((prevState) => ({
-    //     ...prevState,
-    //     orders: 
-    //     lastTime: 
-    //   }));
-    // }
+    
+    
+    //how do I make sure this isn't called when page loads? seems super simple but im seeing circles.
+    updateOrderStatus(id, status); 
 
     return () => { 
       console.log(id); 
@@ -176,17 +180,7 @@ export class Order extends React.Component<OrderProps, OrderState> {
     }
   }
 
- // updateOrderStatus(id: string, status: string) {
- //    let promise = fetch('/api/orders/${id}', {
- //        method: 'POST',
- //        body: `status` //update status
- //    });
- //      // post to /api/orders/${id} to update status to XX
- //      // API endpoint: 
- //      let response = await promise;
- //      let result = await response.json();
- //      return result;
- //  }
+
  
   renderAnOrder(anOrder: OrderInterface) {
     const {
@@ -212,6 +206,61 @@ export class Order extends React.Component<OrderProps, OrderState> {
     );
   }
 }
+
+async function updateOrderStatus(id: string, status: string) {
+    console.log('BOOO IM IN HERE');
+    const putUrl = 'http://localhost:3001/api/orders/' + id //when I don't have 3001 explicility stated it defaults to 3000, which is wrong no? as express is running on 3001
+    let promise = fetch(putUrl, {
+      method: 'PUT',
+      body: `{"id":1,"donuts":"'{\"Original Glazed\":2}'","timestamp":1552937299000,"status":"Accepted","droneID":"XKEDFY","address":"\"location\": {\n \"lat\": 40.44394444,\n \"lng\": -79.94444444\n }"}`, //this order object should reflect the updated status, currently hard coded to get initial viability
+      headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      },
+    });
+
+    let response = await promise;
+    let result = await response.json();
+    
+    //given im using PUT, result should be the updaed order object, which then can be used to update state
+    return result;
+
+    //update state
+    // this.setState((prevState) => ({
+    //   ...prevState,
+    //   orders: 
+    //   lastTime: 
+    // }));
+      
+
+  }
+
+
+  
+  // updateOrderStatus(id: string, status: string) {
+  //   let promise = fetch('/api/orders/${id}', {
+  //       method: 'PUT',
+  //       body: `status`, //update status
+
+  //   });
+  //     // post to /api/orders/${id} to update status to XX
+  //     // API endpoint: 
+      
+  //     let response = await promise;
+  //     let result = await response.json();
+  //     return result;
+
+  //      //if post is succesffull, then actually go through and update state
+  //    // can't have this be inside of updateOrder state directly because this will be called when button is orginally loaded
+  //   // if (doIPost == success) {
+  //   //   //update state
+  //   //   this.setState((prevState) => ({
+  //   //     ...prevState,
+  //   //     orders: 
+  //   //     lastTime: 
+  //   //   }));
+  //   // }
+
+  // }
 
 
 export default Order;
