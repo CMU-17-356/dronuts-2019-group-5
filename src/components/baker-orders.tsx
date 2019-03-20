@@ -143,7 +143,7 @@ export class Order extends React.Component<OrderProps, OrderState> {
                 {allOrders}
               </tbody>
           </table>
-      {/*<button onClick={/*this.handleClick.bind(this)}>New order</button> */}
+
       </div>
     );
   }
@@ -174,10 +174,7 @@ export class Order extends React.Component<OrderProps, OrderState> {
 
       console.log(status,this.state);
 
-
-      //how do I make sure this isn't called when page loads? seems super simple but im seeing circles.
-      // updateOrderStatus(id, status);
-      updateOrderStatus(id, "Wow"); // todo: fixme. This is just to test.
+      updateOrderStatus(id, status); 
 
     }
   }
@@ -210,11 +207,11 @@ export class Order extends React.Component<OrderProps, OrderState> {
 }
 
 async function updateOrderStatus(id: string, status: string) {
-    console.log('BOOO IM IN HERE');
-    const putUrl = '/api/orders/' + id //when I don't have 3001 explicility stated it defaults to 3000, which is wrong no? as express is running on 3001
+    console.log('status is ' + status);
+    const putUrl = '/api/orders/' + id 
     let promise = fetch(putUrl, {
       method: 'PUT',
-      body: `{"id":1,"donuts":"'{\"Original Glazed\":2}'","timestamp":1552937299000,"status":"Accepted","droneID":"XKEDFY","address":"\"location\": {\n \"lat\": 40.44394444,\n \"lng\": -79.94444444\n }"}`, //this order object should reflect the updated status, currently hard coded to get initial viability
+      body: 'status=' + status,
       headers: {
       "Content-Type": "application/x-www-form-urlencoded",
       },
@@ -222,7 +219,6 @@ async function updateOrderStatus(id: string, status: string) {
 
     let response = await promise;
     console.log(response);
-    debugger;
     let result = await response.json();
 
     //given im using PUT, result should be the updaed order object, which then can be used to update state
@@ -239,32 +235,6 @@ async function updateOrderStatus(id: string, status: string) {
   }
 
 
-
-  // updateOrderStatus(id: string, status: string) {
-  //   let promise = fetch('/api/orders/${id}', {
-  //       method: 'PUT',
-  //       body: `status`, //update status
-
-  //   });
-  //     // post to /api/orders/${id} to update status to XX
-  //     // API endpoint:
-
-  //     let response = await promise;
-  //     let result = await response.json();
-  //     return result;
-
-  //      //if post is succesffull, then actually go through and update state
-  //    // can't have this be inside of updateOrder state directly because this will be called when button is orginally loaded
-  //   // if (doIPost == success) {
-  //   //   //update state
-  //   //   this.setState((prevState) => ({
-  //   //     ...prevState,
-  //   //     orders:
-  //   //     lastTime:
-  //   //   }));
-  //   // }
-
-  // }
 
 
 export default Order;

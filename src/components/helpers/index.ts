@@ -34,7 +34,3 @@ export function getOrders(time: number) {
   return getUrl(getOrdersUrl);
 }
 
-export function updateOrder(id: string) {
-  const putOrdersUrl = '/api/orders?id=' + id;
-  return getUrl(putOrdersUrl);
-}

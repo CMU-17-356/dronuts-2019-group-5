@@ -111,15 +111,25 @@ app.put('/api/orders/:orderId', (req, res) => {
   console.log('Received a request at' + (new Date).getTime());
 
   console.log(req.params.orderId);
-  console.log(req.body);
+  console.log(req.body.status);
 
+  // db.run("UPDATE tbl SET name = ? WHERE id = ?", "bar", 2);
 
+  //     // As an array.
+  //     db.run("UPDATE tbl SET name = ? WHERE id = ?", [ "bar", 2 ]);
+
+  //     // As an object with named parameters.
+  //     db.run("UPDATE tbl SET name = $name WHERE id = $id", {
+  //         $id: 2,
+  //         $name: "bar"
+  //     });
+  
   db.run(
     //update the whole order, not just the status and it should give back the whole order
     //'UPDATE INTO orders(status) WHERE id=? VALUES (?)', req.params.orderId, req.body.status,
 
-    'UPDATE orders SET status=? WHERE id=? ',
-    [JSON.stringify(req.body), req.params.orderId],
+    "UPDATE orders SET status=? WHERE id=? ",
+    [req.body.status, req.params.orderId],
     function(err) {
 
       if (err) {
