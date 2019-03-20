@@ -25,6 +25,7 @@ export interface OrderInterface {
 export interface OrderState {
   orders: OrderInterface[];
   lastTime: number;
+  firstTime: number;
   poller?: number;
   notificationDOMRef: any;
 }
@@ -39,6 +40,7 @@ export class Order extends React.Component<OrderProps, OrderState> {
       this.state = {
         orders: [], //should this be this.props.orders? does it matter?
         lastTime: 0,
+        firstTime: 0,
         poller: undefined,
         notificationDOMRef: React.createRef(),
       };
@@ -47,11 +49,14 @@ export class Order extends React.Component<OrderProps, OrderState> {
   async componentDidMount() {
     const time = (new Date).getTime() - 60*60*24*1000; //orders within the last hour
     const orders: OrderInterface[] = await getOrders(time);
+
     const lastTime = this.getLastTime(orders);
+    const firstTime = this.getFirstTime(orders);
     this.setState((prevState) => ({
         ...prevState,
         orders: orders,
         lastTime: lastTime,
+        firstTime: firstTime,
       })
     );
     if (!this.state.poller) {
@@ -68,6 +73,16 @@ export class Order extends React.Component<OrderProps, OrderState> {
     }
   }
 
+  getFirstTime(orders: OrderInterface[]) {
+    let firstTime = this.state.firstTime;
+    for (let o of orders) {
+      if (o.timestamp < firstTime) {
+        firstTime = o.timestamp;
+      }
+    }
+    return firstTime;
+  }
+
   getLastTime(orders: OrderInterface[]) {
     let lastTime = this.state.lastTime;
     for (let o of orders) {
@@ -79,7 +94,7 @@ export class Order extends React.Component<OrderProps, OrderState> {
   }
 
   async checkOrders() {
-    console.log("Checking for orders since " + this.state.lastTime);
+    // console.log("Checking for orders since " + this.state.lastTime);
     const orders: any = await getOrders(this.state.lastTime + 1);
     if (orders.length > 0) { // non-empty
       const lastTime = this.getLastTime(orders);
@@ -119,7 +134,13 @@ export class Order extends React.Component<OrderProps, OrderState> {
   }
 
   renderAllOrders() {
-    const allOrders = this.state.orders.map(this.renderAnOrder);
+
+
+    // debugger;
+    const allOrders = this.state.orders.map(this.renderAnOrder.bind(this));
+
+    //const allOrders = this.state.orders.map(this.renderAnOrder);
+
 
     //if status equals incoming, then call renderAnOrder
 
@@ -139,13 +160,65 @@ export class Order extends React.Component<OrderProps, OrderState> {
                 {allOrders}
               </tbody>
           </table>
-      {/*<button onClick={/*this.handleClick.bind(this)}>New order</button> */}
+
       </div>
-    )
+    );
+  }
+
+  beginUpdateStatus(id: string, status: string) {
+    //the drone should handle dispatched to delivered
+    return () => {
+      //console.log(id);
+      //console.log(status,this.state);
+      if (status == 'Ordered') {
+        //console.log('status was '  + status);
+        status = 'Accepted';
+        //console.log('status is now '  + status);
+      }
+      else if (status == 'Accepted') {
+        status = 'Dispatched';
+      }
+      else // don't update status b/c baker shouldn't be updating it if its anything else besides ordered or accepted
+        status = status;
+      //console.log(status,this.state);
+      this.updateOrderStatus(id, status);
+
+    }
+  }
+
+  async finishUpdateStatus() {
+    const orders: any = await getOrders(this.state.firstTime - 1);
+    this.setState((prevState) => ({
+      ...prevState,
+      orders: orders
+    }));
+  }
+
+  async updateOrderStatus(id: string, status: string) {
+    console.log('status is ' + status);
+    const putUrl = '/api/orders/' + id
+    let promise = fetch(putUrl, {
+      method: 'PUT',
+      body: 'status=' + status,
+      headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      },
+    });
+
+    let response = await promise;
+    // console.log('response is ' + response);
+    let result = await response.json();
+    // console.log('result is ' + response);
+    //given im using PUT, result should be the updaed order object, which then can be used to update state
+    console.log('getting here');
+
+    this.finishUpdateStatus();
+
+    return result;
   }
 
 
-  renderAnOrder(anOrder: OrderInterface) {
+  renderAnOrder(anOrder: OrderInterface ) {
     const {
       id,
       donuts,
@@ -163,11 +236,16 @@ export class Order extends React.Component<OrderProps, OrderState> {
         <td>{status}</td>
         <td>{droneID}</td>
         <td>{address}</td>
-        <td><button>Update Order Status</button></td>
+        <td><button className="menu-item-quantity-picker-increment" onClick={this.beginUpdateStatus(id, status)}>Update Order Status</button></td>
+
       </tr>
     );
   }
 }
+
+
+
+
 
 
 export default Order;

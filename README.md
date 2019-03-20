@@ -33,6 +33,7 @@ On successful builds, the site is deployed to Azure on http://40.78.84.106:3000/
 - Dependency Management: Greenkeeper
 - CI: Travis CI
 - Google Analytics (group5dronuts@gmail.com)
+- MAPQuest API
 - Database: SQLite
 
 ## References

@@ -104,3 +104,4 @@ export async function sendDrone(droneId: number, lat: number, lng: number) {
   let response = await promise;
   return response;
 }
+

@@ -75,28 +75,6 @@ app.get('/api/orders', (req, res) => {
   })
 });
 
-app.get('/api/orders/:orderId', (req, res) => {
-  db.get(
-    'SELECT * FROM orders where id=?', req.params.orderId,
-    function(err, row) {
-      if (err) {
-        // some unknown SQL error
-        console.log(err);
-        res.sendStatus(500);
-        return;
-      }
-
-      if (row === undefined) {
-        // query executes successfully but no results
-        res.sendStatus(404);
-        return;
-      }
-
-      // return the found result
-      res.send(JSON.stringify(row));
-    }
-  );
-});
 
 //use this when creating a new order
 app.post('/api/orders', (req, res) => {
@@ -120,11 +98,25 @@ app.post('/api/orders', (req, res) => {
   );
 });
 
+
+
+app.put('/api/orders/:orderId', (req, res) => {
+  console.log('Received a request at' + (new Date).getTime());
+
+  console.log(req.params.orderId);
+  console.log(req.body.status);
+
+  const orderStatus = req.body.status;
+
+
 //use to update an order
-app.post('/api/orders/orderId', (req, res) => {
+
+
   db.run(
-    'SELECT * FROM orders where id=?', req.params.orderId,
-    function(err, row) {
+
+    "UPDATE orders SET status=? WHERE id=? ",
+    [req.body.status, req.params.orderId],
+    function(err) {
       if (err) {
         // some unknown SQL error
         console.log(err);
@@ -132,14 +124,16 @@ app.post('/api/orders/orderId', (req, res) => {
         return;
       }
 
-      if (row === undefined) {
-        // query executes successfully but no results
-        res.sendStatus(404);
-        return;
-      }
-      //now that you have order, update it
-      // return the found result
-      // res.send(JSON.stringify(row));
+
+      // See https://github.com/mapbox/node-sqlite3/wiki/API#databaserunsql-param--callback
+      //If execution was successful, the this object will contain two properties named lastID and changes
+      console.log(this.changes);
+
+      res.setHeader('Content-Type', 'application/json');
+      res.status(200);
+      res.send(JSON.stringify({ 'status': orderStatus }));
+
+      
     }
   );
 });
