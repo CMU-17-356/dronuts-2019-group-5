@@ -20,9 +20,7 @@ export const AppRouter: React.StatelessComponent<{}> = () => {
               //{id: "4", donuts: "Rainbow Sprinkles", count: 3, status: "Delivered", droneID: "XHF43", battery: "82%"},
             ]} />
           } />
-          <Route path="/inventory" render={(props) => <Inventory {...props} items={[
-              {id: "1", name: "Original Glazed", ingredients: "wheat_flour, sugar", priceInCents: 100, inStock: true},
-              {id: "2", name: "Chocolate Glazed", ingredients: "white_flour, chocolate, butter", priceInCents: 150, inStock: true,}]} /> } />
+          <Route path="/inventory" render={(props) => <Inventory {...props} items={[]} /> } />
           <Route path="/menu" render={(props) =>
             <Menu {...props} items={[]} />
           } />

@@ -48,8 +48,11 @@ app.get('/api/donuts/:donutId', (req, res) => {
 app.post('/api/donuts', (req, res) => {
   console.log(req.body)
   db.run(
+
     'INSERT INTO donuts(name, priceInCents, available, display, imageUrl, ingredients) VALUES (?, ?, ?, ?, ?, ?)',
-    req.body.name, req.body.priceInCents, req.body.available, req.body.display, req.body.imageUrl, req.body.ingredients,
+
+    [req.body.name, req.body.priceInCents, req.body.available, req.body.display, req.body.imageUrl, req.body.ingredients],
+
     function(err) {
       if (err) {
         // probably some schema has been violated, log and return the error

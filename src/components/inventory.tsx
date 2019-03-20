@@ -1,7 +1,9 @@
 import * as React from 'react';
 import { ChangeEvent, FormEvent } from 'react';
-import { formatPrice } from './helpers';
+import { formatPrice, getDonuts, getUrl } from './helpers';
 import './inventory.css';
+import Menu from './menu';
+import MenuItemProps from './menu';
 
 export interface InventoryItemProps {
   id: string;
@@ -24,22 +26,36 @@ export class Inventory extends React.Component<InventoryProps, InventoryState> {
   constructor(props: InventoryProps) {
     super(props);
 
-    let compilation: { [key: string]: InventoryItemProps } = {};
-    for (let item of this.props.items) {
-      compilation[item.id] = item;
-    }
 
     let tempEntry: InventoryItemProps = enterEntry();
 
     this.state = {
-      compilation: compilation,
+      compilation: {},
       newEntry: tempEntry,
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
+  
 
+  async componentDidMount(){
+    const itemss: InventoryItemProps[] = await getDonuts();
+    
+    let compilation: {[key: string]: InventoryItemProps} = {};
+    
+    for (let item of itemss) {
+        compilation[item.id] = {
+            id : item.id,
+            name: item.name,
+            ingredients: "",
+            priceInCents: item.priceInCents,
+            inStock: true
+            
+        }
+    }
+}
+    
   render() {
     return (
       <div className="keyed-inventory-container">
@@ -81,6 +97,12 @@ export class Inventory extends React.Component<InventoryProps, InventoryState> {
       alert('A donut with that ID was already submitted: ');
     }
     else {
+      const newUrl = '/api/donuts'
+      
+      let promise = fetch(newUrl, this.state.newEntry);
+      app.post('/api/donuts')
+        
+      /*
       this.setState({
         compilation: {
           ...this.state.compilation,
@@ -89,6 +111,7 @@ export class Inventory extends React.Component<InventoryProps, InventoryState> {
         newEntry: tempEntry
       });
       alert('A donut was submitted: ');
+      */
     }
   }
 
