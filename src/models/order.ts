@@ -17,7 +17,7 @@ export const orderItemSchema = Joi.object().keys({
 // Represents an order after it has been paid for
 export const orderSchema = Joi.object().keys({
   id: Joi.string().required(),
-  customerId: Joi.string().required(),
+  //customerId: Joi.string().required(),
   items: Joi.array().items(orderItemSchema).min(1),
   totalPrice: Joi.number().required(),
 

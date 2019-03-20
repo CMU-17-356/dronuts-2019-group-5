@@ -9,61 +9,89 @@ import * as React from 'react';
 import './baker-orders.css';
 import ReactNotification from "react-notifications-component";
 import "react-notifications-component/dist/theme.css";
+import { getOrders, getUrl } from './helpers';
+import {Button} from 'react-bootstrap';
+
 
 export interface OrderInterface {
   id: string;
   donuts: string;
-  count: number;
+  timestamp: number;
   status: string;
   droneID: string;
-  battery: string;
+  address: string;
 }
 
 export interface OrderState {
-  ordersDict: {
-    [key: string]: OrderInterface
-  };
+  orders: OrderInterface[];
+  lastTime: number;
+  poller?: number;
   notificationDOMRef: any;
 }
 
 export interface OrderProps {
-  orders: OrderInterface[]
+  orders: OrderInterface[];
 }
 
 export class Order extends React.Component<OrderProps, OrderState> {
   constructor(props: OrderProps) {
-    super(props);
-
-    let ordersDict: { [key: string]: OrderInterface } = {};
-
-    for (let order of this.props.orders) {
-      ordersDict[order.id] = order;
+      super(props);
       this.state = {
-        ordersDict: ordersDict,
+        orders: [], //should this be this.props.orders? does it matter?
+        lastTime: 0,
+        poller: undefined,
         notificationDOMRef: React.createRef(),
       };
+  }
+
+  async componentDidMount() {
+    const time = (new Date).getTime() - 60*60*24*1000; //orders within the last hour
+    const orders: OrderInterface[] = await getOrders(time);
+    const lastTime = this.getLastTime(orders);
+    this.setState((prevState) => ({
+        ...prevState,
+        orders: orders,
+        lastTime: lastTime,
+      })
+    );
+    if (!this.state.poller) {
+      this.setState((prevState) => ({
+        ...prevState,
+        poller: window.setInterval(this.checkOrders.bind(this), 3000),
+      }));
     }
   }
 
+  componentWillUnmount() {
+    if (this.state.poller) {
+      window.clearInterval(this.state.poller)
+    }
+  }
 
-  handleClick() {
-    let newOrder: OrderInterface = { id: "4", donuts: "Chocolate Glazed", count: 3, status: "Ordered", droneID: "XHG73", battery: "99%" };
-    this.setState({
-      ordersDict: {
-        ...this.state.ordersDict,
-        [newOrder.id]: newOrder
+  getLastTime(orders: OrderInterface[]) {
+    let lastTime = this.state.lastTime;
+    for (let o of orders) {
+      if (o.timestamp > lastTime) {
+        lastTime = o.timestamp;
       }
     }
-    );
+    return lastTime;
   }
 
-  render() {
-    return (
-      <div>
-        {this.renderAllOrders()}
-        {this.renderNotificationButton()}
-      </div>
-    );
+  async checkOrders() {
+    console.log("Checking for orders since " + this.state.lastTime);
+    const orders: any = await getOrders(this.state.lastTime + 1);
+    if (orders.length > 0) { // non-empty
+      const lastTime = this.getLastTime(orders);
+
+      this.setState((prevState) => ({
+        ...prevState,
+        orders: orders.concat(prevState.orders),
+        lastTime: lastTime,
+      }));
+
+      this.addNotification()();
+    }
   }
 
   addNotification() {
@@ -79,53 +107,39 @@ export class Order extends React.Component<OrderProps, OrderState> {
       dismiss: { duration: 9000 },
       dismissable: { click: true }
     });
-
   }
 
-  renderNotificationButton() {
+  render() {
     return (
-      <div className="app-content">
+      <div>
+        {this.renderAllOrders()}
         <ReactNotification ref={this.state.notificationDOMRef} />
-        <button onClick={(event) => { this.addNotification()(); this.handleClick(); }} className="btn btn-primary">
-          Create things
-        </button>
       </div>
     );
   }
 
-
   renderAllOrders() {
-    let nonzero: OrderInterface[] = [];
-    for (let key of Object.keys(this.state.ordersDict)) {
-      if (this.state.ordersDict[key]) {
-        nonzero.push(this.state.ordersDict[key]);
-      }
-    }
+    const allOrders = this.state.orders.map(this.renderAnOrder);
 
-    if (nonzero.length == 0) {
-      return <div className="orders-container" />;
-    }
-
-    const ordersDictItems = nonzero.map(
-      (anOrder: OrderInterface) => (this.renderAnOrder(anOrder))
-    );
+    //if status equals incoming, then call renderAnOrder
 
     return (
       <div className="menu-cart-container">
-        <h1 className="menu-title">Orders</h1>
-        <table className="menu">
-          <tbody>
-            <tr>
-              <th>Order ID</th>
-              <th>Items</th>
-              <th>Quantity</th>
-              <th>Status</th>
-              <th>Drone ID</th>
-              <th>Battery</th>
-            </tr>
-            {ordersDictItems}
-          </tbody>
-        </table>
+          <h1 className="menu-title">Orders within the last hour</h1>
+          <table className="menu">
+              <tbody>
+              <tr>
+                <th>Order ID</th>
+                <th>Donuts</th>
+                <th>Timestamp</th>
+                <th>Status</th>
+                <th>Drone ID</th>
+                <th>Address</th>
+              </tr>
+                {allOrders}
+              </tbody>
+          </table>
+      {/*<button onClick={/*this.handleClick.bind(this)}>New order</button> */}
       </div>
     )
   }
@@ -135,20 +149,21 @@ export class Order extends React.Component<OrderProps, OrderState> {
     const {
       id,
       donuts,
-      count,
+      timestamp,
       status,
       droneID,
-      battery
+      address
     } = anOrder;
 
     return (
       <tr key={id}>
         <td>{id}</td>
         <td>{donuts}</td>
-        <td>{count}</td>
+        <td>{timestamp}</td>
         <td>{status}</td>
         <td>{droneID}</td>
-        <td>{battery}</td>
+        <td>{address}</td>
+        <td><button>Update Order Status</button></td>
       </tr>
     );
   }

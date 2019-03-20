@@ -14,11 +14,12 @@ export const Header: React.StatelessComponent<{}> = () => {
             className="d-inline-block align-top"
           />
           {' Pgh '}
-        </Navbar.Brand> 
+        </Navbar.Brand>
         <Nav className="mr-auto">
           <Nav.Link href="#menu">Menu</Nav.Link>
           <Nav.Link href="#inventory">Inventory</Nav.Link>
           <Nav.Link href="#baker-orders">Baker Orders</Nav.Link>
+          <Nav.Link href="#drone-controller">Drone Controller (dev only)</Nav.Link>
         </Nav>
         <Navbar.Text>
           Signed in as: <a href="#login">Bill Peduto</a>

@@ -3,7 +3,7 @@ import clone from 'clone';
 
 const correctOrder = {
   id: '1',
-  customerId: '2',
+  //customerId: '2',
   items: [{
     donutId: '3',
     quantity: 1,
