@@ -129,12 +129,12 @@ app.post('/api/orders', (req, res) => {
 //use postman to check put request - in the put reuqest have the order json
 //
 app.put('/api/orders/:orderId', (req, res) => {
-  console.log('AND NOW IM IN HERE AHH');
+  console.log('Received a request at' + (new Date).getTime());
 
   db.run(
     //update the whole order, not just the status and it should give back the whole order
     //'UPDATE INTO orders(status) WHERE id=? VALUES (?)', req.params.orderId, req.body.status,
-    'UPDATE INTO orders WHERE id=? VALUES (?)', req.params.orderId, req.body,
+    'UPDATE orders SET status=? WHERE id=? ', req.params.orderId, req.body,
     function(err, row) {
       if (err) {
         // some unknown SQL error
@@ -145,6 +145,7 @@ app.put('/api/orders/:orderId', (req, res) => {
 
       if (row === undefined) {
         // query executes successfully but no results
+        console.log("No row found");
         res.sendStatus(404);
         return;
       }
