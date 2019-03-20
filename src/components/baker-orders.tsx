@@ -174,20 +174,43 @@ export class Order extends React.Component<OrderProps, OrderState> {
 
       console.log(status,this.state);
 
-      updateOrderStatus(id, status); 
+      this.updateOrderStatus(id, status);
 
     }
   }
 
   finishUpdateStatus() {
     const time = (new Date).getTime() - 60*60*24*1000; //orders within the last hour
-    const orders: OrderInterface[] = await getOrders(time);
+    const orders: OrderInterface[] = getOrders(time) as any;
     const lastTime = this.getLastTime(orders);
      //update state
     this.setState((prevState) => ({
       ...prevState,
       orders: orders,
     }));
+  }
+
+  async updateOrderStatus(id: string, status: string) {
+    console.log('status is ' + status);
+    const putUrl = '/api/orders/' + id
+    let promise = fetch(putUrl, {
+      method: 'PUT',
+      body: 'status=' + status,
+      headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      },
+    });
+
+    let response = await promise;
+    // console.log('response is ' + response);
+    let result = await response.json();
+    // console.log('result is ' + response);
+    //given im using PUT, result should be the updaed order object, which then can be used to update state
+    console.log('getting here');
+
+    this.finishUpdateStatus();
+
+    return result;
   }
 
 
@@ -216,28 +239,7 @@ export class Order extends React.Component<OrderProps, OrderState> {
   }
 }
 
-async function updateOrderStatus(id: string, status: string) {
-    console.log('status is ' + status);
-    const putUrl = '/api/orders/' + id 
-    let promise = fetch(putUrl, {
-      method: 'PUT',
-      body: 'status=' + status,
-      headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-      },
-    });
 
-    let response = await promise;
-    // console.log('response is ' + response);
-    let result = await response.json();
-    // console.log('result is ' + response);
-    //given im using PUT, result should be the updaed order object, which then can be used to update state
-    console.log('getting here');
-    
-    finishUpdateStatus();
-
-    return result;
-  }
 
 
 
