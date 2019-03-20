@@ -180,7 +180,8 @@ export class Order extends React.Component<OrderProps, OrderState> {
   }
 
   finishUpdateStatus() {
-    const orders: OrderInterface[] = getOrders(time);
+    const time = (new Date).getTime() - 60*60*24*1000; //orders within the last hour
+    const orders: OrderInterface[] = await getOrders(time);
     const lastTime = this.getLastTime(orders);
      //update state
     this.setState((prevState) => ({
@@ -208,7 +209,7 @@ export class Order extends React.Component<OrderProps, OrderState> {
         <td>{status}</td>
         <td>{droneID}</td>
         <td>{address}</td>
-        <td><button className="menu-item-quantity-picker-increment" onClick={this.beginUpdateState(id, status)}>Update Order Status</button></td>
+        <td><button className="menu-item-quantity-picker-increment" onClick={this.beginUpdateStatus(id, status)}>Update Order Status</button></td>
 
       </tr>
     );
