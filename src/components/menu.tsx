@@ -199,7 +199,6 @@ export class Menu extends React.Component<MenuProps, MenuState> {
         // check for a drone to assign
         const droneId = await getValidDroneId();
         if (!droneId) {
-          console.log("error");
           this.setState(prevState => ({
             ...prevState,
             order: {

@@ -47,7 +47,6 @@ app.get('/api/donuts/:donutId', (req, res) => {
 });
 
 app.post('/api/donuts', (req, res) => {
-  console.log(req.body)
   db.run(
     'INSERT INTO donuts(name, priceInCents, available, display, imageUrl, ingredients) VALUES (?, ?, ?, ?, ?, ?)',
     req.body.name, req.body.priceInCents, req.body.available, req.body.display, req.body.imageUrl, req.body.ingredients,
@@ -101,7 +100,6 @@ app.get('/api/orders/:orderId', (req, res) => {
 
 //use this when creating a new order
 app.post('/api/orders', (req, res) => {
-  console.log(req.body)
   db.run(
     //start with donuts row, id handled automatically
     'INSERT INTO orders(donuts, timestamp, status, droneID, address) VALUES (?, ?, ?, ?, ?)',
@@ -124,7 +122,6 @@ app.post('/api/orders', (req, res) => {
 
 //use to update an order
 app.post('/api/orders/orderId', (req, res) => {
-  console.log(req.body)
   db.run(
     'SELECT * FROM orders where id=?', req.params.orderId,
     function(err, row) {
