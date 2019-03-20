@@ -24,28 +24,6 @@ export async function createTransaction(totalPrice: number) {
   return result;
 }
 
-// export async function postUpdateStatus(id: string) {
-//   const id 
-//   const updateStatusUrl = '/api/orders/:orderID', ;
-
-// }
-
-// export async function updateStatus(id: string) {
-//     console.log(this);
-//     console.log('boo');
-//     return () => { console.log(id); }
-//     // const updateStatusURL = 'api/orders/:orderID';
-//     // let promise = fetch(updateStatusURL, {
-//     //    method: 'POST',
-//     //    body: `companyId=5&amount=${(totalPrice / 100).toFixed(2)}`,
-//     //   headers: {
-//     //     "Content-Type": "application/x-www-form-urlencoded",
-//     //   },
-//     // });
-// }
-
-
-
 export function getDonuts() {
   const getDonutUrl = '/api/donuts';
   return getUrl(getDonutUrl);

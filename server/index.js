@@ -123,11 +123,17 @@ app.post('/api/orders', (req, res) => {
 });
 
 //use to update an order
+//post is for creating new resource
+//put is for updating resource
+
+//use postman to check put request - in the put reuqest have the order json
+//
 app.post('/api/orders/:orderId', (req, res) => {
   console.log(req.body)
+
   db.run(
-    'SELECT * FROM orders WHERE id=?', req.params.orderId,
-    'INSERT INTO orders(donuts, count, status, droneID, batteryLevel) VALUES (?, ?, ?, ?, ?)'
+    //update the whole order, not just the status and it should give back the whole order
+    'UPDATE INTO orders(status) WHERE id=? VALUES (?)', req.params.orderId, req.body.status,
     function(err, row) {
       if (err) {
         // some unknown SQL error
@@ -143,8 +149,8 @@ app.post('/api/orders/:orderId', (req, res) => {
       }
 
       //now that you have order, update it
-      // return the found result
-      // res.send(JSON.stringify(row));
+      //return the found result
+      //res.send(JSON.stringify(row));
     }
   );
 });

@@ -48,7 +48,7 @@ export class Order extends React.Component<OrderProps, OrderState> {
     const time = (new Date).getTime() - 60*60*24*1000; //orders within the last hour
     const orders: OrderInterface[] = await getOrders(time);
     console.log(orders);
-    debugger;
+    // debugger;
     const lastTime = this.getLastTime(orders);
     this.setState((prevState) => ({
         ...prevState,
@@ -81,7 +81,7 @@ export class Order extends React.Component<OrderProps, OrderState> {
   }
 
   async checkOrders() {
-    console.log("Checking for orders since " + this.state.lastTime);
+    // console.log("Checking for orders since " + this.state.lastTime);
     const orders: any = await getOrders(this.state.lastTime + 1);
     if (orders.length > 0) { // non-empty
       const lastTime = this.getLastTime(orders);
@@ -122,8 +122,8 @@ export class Order extends React.Component<OrderProps, OrderState> {
 
   renderAllOrders() {
 
-    debugger;
-    const allOrders = this.state.orders.map(this.renderAnOrder);
+    // debugger;
+    const allOrders = this.state.orders.map(this.renderAnOrder.bind(this));
 
     //if status equals incoming, then call renderAnOrder
 
@@ -148,25 +148,46 @@ export class Order extends React.Component<OrderProps, OrderState> {
     )
   }
 
-  updateOrderState(id: string) {
-    console.log(this);
-    console.log('boo');
-    // const possibleStatus = {'Ordered', 'Accepted', 'Dispatched', 'Delivered'};
-    //update state and submit a post request postUpdateStatus()
-    return () => { console.log(id); }
+  beginUpdateState(id: string, status: string) {
+    const nextStatus = {
+      'Ordered': 'Accepted',
+      'Accepted': 'Dispatched',
+      'Dispatched': 'Delivered'
 
-    
-    // const updateStatusURL = 'api/orders/:orderID';
-    // let promise = fetch(updateStatusURL, {
-    //    method: 'POST',
-    // //   body: `companyId=5&amount=${(totalPrice / 100).toFixed(2)}`,
-    // //   headers: {
-    //     "Content-Type": "application/x-www-form-urlencoded",
-    //   },
-    // });
-  }  
-  
+    }
 
+    console.log(status,this.state);
+    // const doIPost = updateOrderStatus(id, nextStatus[status]) 
+
+    //if post is succesffull, then actually go through and update state
+     // can't have this be inside of updateOrder state directly because this will be called when button is orginally loaded
+    // if (doIPost == success) {
+    //   //update state
+    //   this.setState((prevState) => ({
+    //     ...prevState,
+    //     orders: 
+    //     lastTime: 
+    //   }));
+    // }
+
+    return () => { 
+      console.log(id); 
+      console.log(status,this.state);
+    }
+  }
+
+ // updateOrderStatus(id: string, status: string) {
+ //    let promise = fetch('/api/orders/${id}', {
+ //        method: 'POST',
+ //        body: `status` //update status
+ //    });
+ //      // post to /api/orders/${id} to update status to XX
+ //      // API endpoint: 
+ //      let response = await promise;
+ //      let result = await response.json();
+ //      return result;
+ //  }
+ 
   renderAnOrder(anOrder: OrderInterface) {
     const {
       id,
@@ -185,7 +206,7 @@ export class Order extends React.Component<OrderProps, OrderState> {
         <td>{status}</td>
         <td>{droneID}</td>
         <td>{address}</td>
-        <td><button className="menu-item-quantity-picker-increment" onClick={this.updateOrderState(id)}>Update Order Status</button></td>
+        <td><button className="menu-item-quantity-picker-increment" onClick={this.beginUpdateState(id, status)}>Update Order Status</button></td>
         
       </tr>
     );
